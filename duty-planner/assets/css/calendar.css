@@ -1,0 +1,708 @@
+/* Duty Planner – public calendar */
+
+.dp-planner,
+.dp-dialog {
+	--dp-needs: #c62828;
+	--dp-needs-bg: rgba(198, 40, 40, 0.09);
+	--dp-open: #b86e00;
+	--dp-open-bg: rgba(230, 150, 0, 0.12);
+	--dp-full: #2e7d32;
+	--dp-full-bg: rgba(46, 125, 50, 0.12);
+	--dp-skipped: #8a8a8a;
+	--dp-skipped-bg: rgba(128, 128, 128, 0.1);
+	--dp-border: rgba(128, 128, 128, 0.28);
+	--dp-muted: rgba(128, 128, 128, 1);
+	--dp-accent: #2563eb;
+	--dp-radius: 8px;
+	box-sizing: border-box;
+}
+
+.dp-planner *,
+.dp-dialog * {
+	box-sizing: border-box;
+}
+
+.dp-planner {
+	margin: 1.5em 0;
+	font-size: 15px;
+	line-height: 1.4;
+}
+
+/* Status colour tokens used by chips, cards, legend and dialog. */
+.dp-state-needs { --c: var(--dp-needs); --bg: var(--dp-needs-bg); }
+.dp-state-open { --c: var(--dp-open); --bg: var(--dp-open-bg); }
+.dp-state-full { --c: var(--dp-full); --bg: var(--dp-full-bg); }
+.dp-state-skipped { --c: var(--dp-skipped); --bg: var(--dp-skipped-bg); }
+
+/* ---------------------------------------------------------------- header */
+
+.dp-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px 16px;
+	margin-bottom: 10px;
+}
+
+.dp-title {
+	margin: 0;
+	font-size: 1.3em;
+	flex: 1 1 auto;
+	text-align: center;
+	text-transform: capitalize;
+}
+
+.dp-nav,
+.dp-views {
+	display: flex;
+	gap: 4px;
+}
+
+.dp-btn {
+	appearance: none;
+	font: inherit;
+	font-size: 0.9em;
+	padding: 6px 12px;
+	border: 1px solid var(--dp-border);
+	border-radius: 6px;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	line-height: 1.2;
+}
+
+.dp-btn:hover {
+	border-color: currentColor;
+}
+
+.dp-btn:focus-visible,
+.dp-chip:focus-visible,
+.dp-linkbtn:focus-visible,
+.dp-close:focus-visible {
+	outline: 2px solid var(--dp-accent);
+	outline-offset: 2px;
+}
+
+.dp-btn-icon {
+	font-size: 1.2em;
+	padding: 3px 12px;
+}
+
+.dp-btn[aria-pressed="true"] {
+	background: rgba(128, 128, 128, 0.18);
+	font-weight: 600;
+}
+
+.dp-btn-primary {
+	background: var(--dp-accent);
+	border-color: var(--dp-accent);
+	color: #fff;
+	font-weight: 600;
+}
+
+.dp-btn-primary:hover {
+	filter: brightness(1.08);
+	border-color: var(--dp-accent);
+}
+
+.dp-btn:disabled {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+/* ---------------------------------------------------------------- legend */
+
+.dp-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 16px;
+	list-style: none;
+	margin: 0 0 12px;
+	padding: 0;
+	font-size: 0.85em;
+}
+
+.dp-legend li {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+}
+
+.dp-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 1.35em;
+	height: 1.35em;
+	border-radius: 50%;
+	background: var(--c);
+	color: #fff;
+	font-size: 0.78em;
+	font-weight: 700;
+	line-height: 1;
+}
+
+/* ------------------------------------------------------------ month grid */
+
+.dp-body {
+	transition: opacity 0.15s;
+}
+
+.dp-body.dp-is-loading {
+	opacity: 0.5;
+}
+
+.dp-weekdays,
+.dp-grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.dp-weekdays div {
+	padding: 4px 6px;
+	font-size: 0.8em;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--dp-muted);
+}
+
+.dp-grid {
+	border-top: 1px solid var(--dp-border);
+	border-left: 1px solid var(--dp-border);
+	border-radius: var(--dp-radius);
+	overflow: hidden;
+}
+
+.dp-day {
+	min-height: 7em;
+	padding: 4px;
+	border-right: 1px solid var(--dp-border);
+	border-bottom: 1px solid var(--dp-border);
+	min-width: 0;
+}
+
+.dp-outside {
+	background: rgba(128, 128, 128, 0.05);
+}
+
+.dp-outside .dp-daynum {
+	opacity: 0.45;
+}
+
+.dp-daylabel {
+	margin-bottom: 2px;
+	font-size: 0.85em;
+}
+
+.dp-daynum {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.8em;
+	height: 1.8em;
+	border-radius: 50%;
+	font-weight: 600;
+}
+
+.dp-today .dp-daynum {
+	background: var(--dp-accent);
+	color: #fff;
+}
+
+.dp-daylong {
+	display: none;
+	font-weight: 600;
+}
+
+.dp-chips {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.dp-chip {
+	appearance: none;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	grid-template-areas:
+		"icon title title"
+		"icon time count";
+	align-items: center;
+	gap: 1px 4px;
+	width: 100%;
+	margin: 0;
+	padding: 3px 5px;
+	border: 0;
+	border-left: 4px solid var(--c);
+	border-radius: 4px;
+	background: var(--bg);
+	color: inherit;
+	font: inherit;
+	font-size: 0.78em;
+	line-height: 1.25;
+	text-align: left;
+	cursor: pointer;
+	transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.dp-chip:hover {
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+}
+
+/* Duties looking for people get diagonal stripes so they stand out. */
+.dp-chip.dp-state-needs:not(.dp-past),
+.dp-card.dp-state-needs:not(.dp-past) {
+	background-image: repeating-linear-gradient(
+		-45deg,
+		transparent 0 6px,
+		rgba(198, 40, 40, 0.07) 6px 12px
+	);
+}
+
+.dp-chip.dp-allday {
+	font-weight: 600;
+}
+
+.dp-chip .dp-icon {
+	grid-area: icon;
+	align-self: start;
+	margin-top: 1px;
+}
+
+.dp-chip-time {
+	grid-area: time;
+	font-variant-numeric: tabular-nums;
+	opacity: 0.8;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.dp-chip-title {
+	grid-area: title;
+	min-width: 0;
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dp-chip-count {
+	grid-area: count;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	color: var(--c);
+}
+
+.dp-past,
+.dp-day-past .dp-chip {
+	opacity: 0.5;
+	background-image: none;
+}
+
+.dp-state-skipped .dp-chip-title,
+.dp-card.dp-state-skipped .dp-card-title {
+	text-decoration: line-through;
+}
+
+.dp-empty,
+.dp-error {
+	padding: 1em;
+	text-align: center;
+	color: var(--dp-muted);
+}
+
+.dp-error {
+	color: var(--dp-needs);
+}
+
+/* ------------------------------------------------------------- list view */
+
+.dp-list-day + .dp-list-day {
+	margin-top: 1.2em;
+}
+
+.dp-list-date {
+	margin: 0 0 0.5em;
+	font-size: 1em;
+}
+
+.dp-cards {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.dp-card {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px 16px;
+	padding: 12px 14px;
+	border: 1px solid var(--dp-border);
+	border-left: 5px solid var(--c);
+	border-radius: var(--dp-radius);
+	background-color: var(--bg);
+}
+
+.dp-card-main {
+	flex: 1 1 260px;
+	min-width: 0;
+}
+
+.dp-card-status,
+.dp-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.8em;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: var(--c);
+}
+
+.dp-hint {
+	font-weight: 400;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.dp-card-title {
+	margin: 4px 0 2px;
+	font-size: 1.05em;
+}
+
+.dp-linkbtn {
+	appearance: none;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.dp-linkbtn:hover {
+	text-decoration: underline;
+}
+
+.dp-card-meta,
+.dp-card-people {
+	font-size: 0.9em;
+	color: var(--dp-muted);
+}
+
+.dp-card-people {
+	margin-top: 4px;
+}
+
+/* ------------------------------------------------------------ fill bar */
+
+.dp-fill {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 8px 0 2px;
+	font-size: 0.85em;
+}
+
+.dp-fill-track {
+	position: relative;
+	flex: 1 1 auto;
+	max-width: 240px;
+	height: 8px;
+	border-radius: 4px;
+	background: rgba(128, 128, 128, 0.2);
+}
+
+.dp-fill-bar {
+	display: block;
+	height: 100%;
+	border-radius: 4px;
+	background: var(--c);
+	transition: width 0.3s;
+}
+
+.dp-fill-min {
+	position: absolute;
+	top: -3px;
+	bottom: -3px;
+	width: 2px;
+	margin-left: -1px;
+	background: currentColor;
+	opacity: 0.55;
+}
+
+.dp-fill-text {
+	flex: none;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- dialog */
+
+.dp-dialog {
+	width: min(480px, calc(100vw - 32px));
+	max-height: calc(100vh - 32px);
+	padding: 0;
+	border: 0;
+	border-top: 6px solid var(--c);
+	border-radius: 12px;
+	background: #fff;
+	color: #1e1e1e;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	font-size: 15px;
+	line-height: 1.45;
+}
+
+.dp-dialog::backdrop {
+	background: rgba(15, 15, 20, 0.5);
+}
+
+.dp-dialog-inner {
+	position: relative;
+	padding: 20px 22px 22px;
+}
+
+.dp-close {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	width: 36px;
+	height: 36px;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	color: inherit;
+	font-size: 26px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.dp-close:hover {
+	background: rgba(0, 0, 0, 0.06);
+}
+
+.dp-dialog-title {
+	margin: 6px 40px 10px 0;
+	font-size: 1.35em;
+	line-height: 1.25;
+}
+
+.dp-details {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 2px 12px;
+	margin: 0 0 10px;
+}
+
+.dp-details dt {
+	font-weight: 600;
+	color: #555;
+}
+
+.dp-details dd {
+	margin: 0;
+}
+
+.dp-description {
+	margin: 0 0 10px;
+	white-space: pre-line;
+}
+
+.dp-subtitle {
+	margin: 14px 0 6px;
+	font-size: 0.95em;
+}
+
+.dp-people {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dp-people li {
+	margin: 0;
+	padding: 2px 10px;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.06);
+	font-size: 0.9em;
+}
+
+.dp-muted {
+	margin: 0;
+	color: #666;
+	font-size: 0.9em;
+}
+
+.dp-note {
+	margin: 12px 0 0;
+	padding: 8px 12px;
+	border-radius: 6px;
+	background: var(--bg);
+	font-size: 0.9em;
+}
+
+.dp-note-lock {
+	background: rgba(0, 0, 0, 0.05);
+	margin: 0 0 10px;
+}
+
+.dp-form {
+	margin-top: 16px;
+	padding-top: 4px;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dp-field {
+	margin-bottom: 10px;
+}
+
+.dp-field label {
+	display: block;
+	margin-bottom: 3px;
+	font-weight: 600;
+	font-size: 0.9em;
+}
+
+.dp-field input {
+	display: block;
+	width: 100%;
+	padding: 8px 10px;
+	border: 1px solid #c3c4c7;
+	border-radius: 6px;
+	background: #fff;
+	color: #1e1e1e;
+	font: inherit;
+}
+
+.dp-field input:focus {
+	outline: 2px solid var(--dp-accent);
+	outline-offset: 0;
+	border-color: var(--dp-accent);
+}
+
+.dp-field small {
+	display: block;
+	margin-top: 3px;
+	color: #666;
+	font-size: 0.8em;
+}
+
+.dp-hp {
+	position: absolute !important;
+	left: -10000px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.dp-actions {
+	margin-top: 14px;
+}
+
+.dp-actions .dp-btn {
+	width: 100%;
+	padding: 10px;
+	font-size: 1em;
+}
+
+.dp-message {
+	margin: 12px 0 0;
+	padding: 8px 12px;
+	border-radius: 6px;
+	font-size: 0.9em;
+}
+
+.dp-message-success {
+	background: var(--dp-full-bg);
+	color: #1b5e20;
+	font-weight: 600;
+}
+
+.dp-message-error {
+	background: var(--dp-needs-bg);
+	color: #8e1c1c;
+}
+
+/* ---------------------------------------------------------- small screens */
+
+@media (max-width: 700px) {
+	.dp-title {
+		order: -1;
+		flex-basis: 100%;
+	}
+
+	.dp-weekdays {
+		display: none;
+	}
+
+	/* The month grid becomes an agenda: only days with duties, full date labels. */
+	.dp-grid {
+		display: block;
+		border: 0;
+		border-radius: 0;
+	}
+
+	.dp-day {
+		min-height: 0;
+		padding: 10px 0;
+		border: 0;
+		border-bottom: 1px solid var(--dp-border);
+		background: none;
+	}
+
+	.dp-day:not(.dp-has-items),
+	.dp-outside,
+	.dp-month-current .dp-day-past {
+		display: none;
+	}
+
+	.dp-daynum {
+		display: none;
+	}
+
+	.dp-daylong {
+		display: inline;
+	}
+
+	.dp-today .dp-daylong {
+		color: var(--dp-accent);
+	}
+
+	.dp-daylabel {
+		margin-bottom: 6px;
+		font-size: 0.95em;
+	}
+
+	.dp-chip {
+		padding: 8px 10px;
+		font-size: 0.95em;
+	}
+
+	.dp-chip-title {
+		white-space: normal;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dp-chip,
+	.dp-fill-bar,
+	.dp-body {
+		transition: none;
+	}
+
+	.dp-chip:hover {
+		transform: none;
+	}
+}
