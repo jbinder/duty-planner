@@ -15,6 +15,7 @@ class Admin {
 		add_action( 'admin_init', array( self::class, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( self::class, 'assets' ) );
 		add_action( 'admin_notices', array( self::class, 'notices' ) );
+		add_filter( 'display_post_states', array( self::class, 'post_states' ), 10, 2 );
 
 		foreach ( array( 'save_spot', 'delete_spot', 'add_registration', 'remove_registration', 'skip', 'unskip', 'test_alert' ) as $action ) {
 			add_action( "admin_post_dutyplan_{$action}", array( self::class, "handle_{$action}" ) );
@@ -306,6 +307,72 @@ class Admin {
 			$text .= ' ' . sprintf( __( 'until %s', 'duty-planner' ), Time::format_date( $spot->end_date ) );
 		}
 		return $text;
+	}
+
+	/**
+	 * Where the public calendar lives – important once the page is unlisted,
+	 * because then no menu on the site leads there.
+	 */
+	public static function calendar_link(): void {
+		$id   = (int) Settings::get( 'calendar_page_id' );
+		$page = $id ? get_post( $id ) : null;
+
+		echo '<div class="dutyplan-calendar-link">';
+		if ( ! $page || 'trash' === $page->post_status ) {
+			printf(
+				/* translators: 1: shortcode, 2: settings link */
+				wp_kses_post( __( 'Public calendar: <strong>no page selected.</strong> Create a page with %1$s and choose it in the <a href="%2$s">settings</a>.', 'duty-planner' ) ),
+				'<code>[duty_planner]</code>',
+				esc_url( self::url( 'dutyplan-settings' ) )
+			);
+			echo '</div>';
+			return;
+		}
+
+		$url = get_permalink( $page );
+		echo '<span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span> ';
+		esc_html_e( 'Public calendar:', 'duty-planner' );
+		printf( ' <a href="%1$s" target="_blank" rel="noopener"><code>%2$s</code></a>', esc_url( $url ), esc_html( $url ) );
+		printf(
+			' <button type="button" class="button button-small dutyplan-copy" data-copy="%1$s" data-done="%2$s">%3$s</button>',
+			esc_attr( $url ),
+			esc_attr__( 'Copied!', 'duty-planner' ),
+			esc_html__( 'Copy link', 'duty-planner' )
+		);
+
+		$notes = array();
+		if ( 'publish' !== $page->post_status ) {
+			$notes[] = __( 'The page is not published yet, so visitors cannot open it.', 'duty-planner' );
+		} elseif ( '' !== $page->post_password ) {
+			$notes[] = __( 'The page is password protected.', 'duty-planner' );
+		}
+		if ( ! self::page_has_calendar( $page ) ) {
+			$notes[] = __( 'The [duty_planner] shortcode was not found on this page. Add it there, e.g. with a Shortcode block, or in Elementor with the Shortcode widget.', 'duty-planner' );
+		}
+		if ( Settings::get( 'unlisted' ) ) {
+			echo ' <span class="dutyplan-unlisted-tag">' . esc_html__( 'Unlisted – only reachable via this link', 'duty-planner' ) . '</span>';
+		}
+		foreach ( $notes as $note ) {
+			echo '<br><span class="dutyplan-warning">' . esc_html( $note ) . '</span>';
+		}
+		echo '</div>';
+	}
+
+	/** Whether the page contains the shortcode – in the regular content or in Elementor's layout data. */
+	public static function page_has_calendar( \WP_Post $page ): bool {
+		$found = has_shortcode( $page->post_content, 'duty_planner' )
+			|| false !== strpos( (string) get_post_meta( $page->ID, '_elementor_data', true ), '[duty_planner' );
+		return (bool) apply_filters( 'dutyplan_page_has_calendar', $found, $page );
+	}
+
+	/** Label the calendar page in the Pages list, like WordPress does for the front page. */
+	public static function post_states( $states, $post ) {
+		if ( (int) $post->ID === (int) Settings::get( 'calendar_page_id' ) ) {
+			$states['dutyplan'] = Settings::get( 'unlisted' )
+				? __( 'Duty Planner calendar (unlisted)', 'duty-planner' )
+				: __( 'Duty Planner calendar', 'duty-planner' );
+		}
+		return $states;
 	}
 
 	public static function status_badge( array $o ): string {

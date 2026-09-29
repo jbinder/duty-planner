@@ -46,7 +46,8 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 						)
 					);
 					?>
-					<p class="description"><?php esc_html_e( 'The page containing the [duty_planner] shortcode. Used for links in emails.', 'duty-planner' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Choosing a page does not add anything to it. First put the [duty_planner] shortcode on the page (block editor: Shortcode block; Elementor: Shortcode widget), then select it here. The plugin uses it for the links in emails, the unlisted option and the link shown in the admin.', 'duty-planner' ); ?></p>
+					<?php Admin::calendar_link(); ?>
 				</td>
 			</tr>
 			<tr>

@@ -9,6 +9,21 @@
 		}
 	} );
 
+	// "Copy link" buttons for the public calendar URL.
+	document.addEventListener( 'click', function ( e ) {
+		var btn = e.target.closest( '.dutyplan-copy' );
+		if ( ! btn || ! navigator.clipboard ) {
+			return;
+		}
+		navigator.clipboard.writeText( btn.getAttribute( 'data-copy' ) ).then( function () {
+			var label = btn.textContent;
+			btn.textContent = btn.getAttribute( 'data-done' );
+			setTimeout( function () {
+				btn.textContent = label;
+			}, 1500 );
+		} );
+	} );
+
 	// Spot form: show only the fields relevant to the chosen frequency / all-day setting.
 	var form = document.querySelector( '.dutyplan-spot-form' );
 	if ( ! form ) {
