@@ -41,6 +41,7 @@ class Privacy {
 					array( 'name' => __( 'Duty', 'duty-planner' ), 'value' => $spot ? $spot->title : '#' . $reg->spot_id ),
 					array( 'name' => __( 'Date', 'duty-planner' ), 'value' => $reg->occurrence_date ),
 					array( 'name' => __( 'Display name', 'duty-planner' ), 'value' => $reg->display_name ),
+					array( 'name' => __( 'Note', 'duty-planner' ), 'value' => $reg->note ),
 					array( 'name' => __( 'Email', 'duty-planner' ), 'value' => $reg->email ),
 					array( 'name' => __( 'Registered at (UTC)', 'duty-planner' ), 'value' => $reg->created_at ),
 				),

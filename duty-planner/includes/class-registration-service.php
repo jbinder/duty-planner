@@ -11,14 +11,16 @@ defined( 'ABSPATH' ) || exit;
 class Registration_Service {
 
 	const MAX_NAME_LENGTH = 60;
+	const MAX_NOTE_LENGTH = 200;
 
 	/**
-	 * @param array $opts bypass_allowlist (bool), notify (bool, send confirmation mail).
+	 * @param array $opts bypass_allowlist (bool), notify (bool, send confirmation mail),
+	 *                    note (string, only kept if the spot has a note field).
 	 * @return object|WP_Error The registration row.
 	 */
 	public static function register( int $spot_id, string $date, string $name, string $email, array $opts = array() ) {
 		global $wpdb;
-		$opts  = wp_parse_args( $opts, array( 'bypass_allowlist' => false, 'notify' => true ) );
+		$opts  = wp_parse_args( $opts, array( 'bypass_allowlist' => false, 'notify' => true, 'note' => '' ) );
 		$name  = trim( sanitize_text_field( $name ) );
 		$email = strtolower( trim( sanitize_email( $email ) ) );
 
@@ -36,6 +38,7 @@ class Registration_Service {
 		if ( ! $spot || ! $spot->active ) {
 			return new WP_Error( 'dutyplan_spot', __( 'This duty does not exist.', 'duty-planner' ), array( 'status' => 404 ) );
 		}
+		$note = '' === $spot->note_label ? '' : mb_substr( trim( sanitize_text_field( (string) $opts['note'] ) ), 0, self::MAX_NOTE_LENGTH );
 		if ( ! Time::is_date( $date ) || ! Recurrence::occurs_on( $spot, $date ) ) {
 			return new WP_Error( 'dutyplan_date', __( 'This duty does not take place on that date.', 'duty-planner' ), array( 'status' => 400 ) );
 		}
@@ -61,7 +64,7 @@ class Registration_Service {
 			if ( Repository::count_for( $spot_id, $date ) >= $spot->max_people ) {
 				return new WP_Error( 'dutyplan_full', __( 'Sorry, this duty is already fully booked.', 'duty-planner' ), array( 'status' => 409 ) );
 			}
-			$id = Repository::insert_registration( $spot_id, $date, $name, $email );
+			$id = Repository::insert_registration( $spot_id, $date, $name, $email, $note );
 		} finally {
 			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock ) );
 		}

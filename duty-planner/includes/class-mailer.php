@@ -49,6 +49,7 @@ class Mailer {
 			'{date}'         => __( 'Date of the duty', 'duty-planner' ),
 			'{time}'         => __( 'Time range, or "All day"', 'duty-planner' ),
 			'{location}'     => __( 'Location', 'duty-planner' ),
+			'{note}'         => __( 'Note the registrant left (if the duty has a note field)', 'duty-planner' ),
 			'{cancel_url}'   => __( 'Personal cancellation link', 'duty-planner' ),
 			'{calendar_url}' => __( 'Link to the calendar page', 'duty-planner' ),
 			'{site}'         => __( 'Site title', 'duty-planner' ),
@@ -88,6 +89,7 @@ class Mailer {
 			'date'       => Time::format_long_date( $reg->occurrence_date ),
 			'time'       => Time::format_time_range( $spot, $reg->occurrence_date ),
 			'location'   => $spot->location ?: '–',
+			'note'       => '' !== (string) $reg->note ? $reg->note : '–',
 			'cancel_url' => Registration_Service::cancel_url( $reg ),
 		);
 	}

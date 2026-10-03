@@ -119,6 +119,15 @@ $weekday_names = Time::weekday_names();
 					</p>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row"><label for="dp-note-label"><?php esc_html_e( 'Note field', 'duty-planner' ); ?></label></th>
+				<td>
+					<input type="text" id="dp-note-label" name="note_label" class="regular-text" maxlength="190" value="<?php echo esc_attr( $values['note_label'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. What will you bring?', 'duty-planner' ); ?>">
+					<p class="description">
+						<?php esc_html_e( 'Optional. If you enter a label, people can add a short note when signing up (optional for them). Notes are shown publicly next to their name in the calendar. Leave empty to hide the field.', 'duty-planner' ); ?>
+					</p>
+				</td>
+			</tr>
 		</table>
 
 		<h2 class="title"><?php esc_html_e( 'Notifications', 'duty-planner' ); ?></h2>

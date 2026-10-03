@@ -55,6 +55,7 @@ class Rest_Controller {
 					'date'    => $date,
 					'name'    => array( 'required' => true, 'type' => 'string' ),
 					'email'   => array( 'required' => true, 'type' => 'string' ),
+					'note'    => array( 'type' => 'string', 'default' => '' ),
 					'nonce'   => array( 'required' => true, 'type' => 'string' ),
 					'website' => array( 'type' => 'string', 'default' => '' ), // Honeypot.
 				),
@@ -66,7 +67,10 @@ class Rest_Controller {
 	public static function public_item( array $o ): array {
 		$o['people'] = array_map(
 			static function ( $p ) {
-				return array( 'name' => $p['name'] );
+				return array(
+					'name' => $p['name'],
+					'note' => $p['note'],
+				);
 			},
 			$o['people']
 		);
@@ -109,7 +113,8 @@ class Rest_Controller {
 			(int) $request['spot_id'],
 			(string) $request['date'],
 			(string) $request['name'],
-			(string) $request['email']
+			(string) $request['email'],
+			array( 'note' => (string) $request['note'] )
 		);
 		if ( is_wp_error( $reg ) ) {
 			return $reg;

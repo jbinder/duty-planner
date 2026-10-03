@@ -534,9 +534,20 @@
 .dp-people li {
 	margin: 0;
 	padding: 2px 10px;
-	border-radius: 999px;
+	border-radius: 12px;
+	overflow-wrap: anywhere;
 	background: rgba(0, 0, 0, 0.06);
 	font-size: 0.9em;
+}
+
+.dp-person-note {
+	color: #555;
+	font-style: italic;
+}
+
+.dp-optional {
+	font-weight: 400;
+	color: #666;
 }
 
 .dp-muted {

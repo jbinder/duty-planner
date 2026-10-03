@@ -150,3 +150,8 @@
 .dutyplan-warning {
 	color: #b32d2e;
 }
+
+.dutyplan-note {
+	color: #50575e;
+	font-style: italic;
+}

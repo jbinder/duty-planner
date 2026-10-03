@@ -106,6 +106,9 @@ $nav = static function ( string $date ) use ( $days, $spot ) {
 								<li>
 									<?php echo esc_html( $p['name'] ); ?>
 									&lt;<a href="mailto:<?php echo esc_attr( $p['email'] ); ?>"><?php echo esc_html( $p['email'] ); ?></a>&gt;
+									<?php if ( '' !== $p['note'] ) : ?>
+										<br><span class="dutyplan-note"><?php echo esc_html( $o['note_label'] . ': ' . $p['note'] ); ?></span>
+									<?php endif; ?>
 									<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="dutyplan-inline-form">
 										<?php Admin::form_fields( 'dutyplan_remove_registration' ); ?>
 										<input type="hidden" name="registration_id" value="<?php echo esc_attr( $p['id'] ); ?>">
@@ -128,6 +131,9 @@ $nav = static function ( string $date ) use ( $days, $spot ) {
 								<input type="hidden" name="date" value="<?php echo esc_attr( $o['date'] ); ?>">
 								<input type="text" name="name" required placeholder="<?php esc_attr_e( 'Name', 'duty-planner' ); ?>">
 								<input type="email" name="email" required placeholder="<?php esc_attr_e( 'Email', 'duty-planner' ); ?>">
+								<?php if ( '' !== $o['note_label'] ) : ?>
+									<input type="text" name="note" maxlength="200" placeholder="<?php echo esc_attr( $o['note_label'] ); ?>">
+								<?php endif; ?>
 								<label><input type="checkbox" name="notify" value="1" checked> <?php esc_html_e( 'Send confirmation', 'duty-planner' ); ?></label>
 								<button class="button button-small"><?php esc_html_e( 'Add', 'duty-planner' ); ?></button>
 							</form>

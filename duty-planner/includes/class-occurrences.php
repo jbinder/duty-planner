@@ -32,7 +32,10 @@ class Occurrences {
 				$list   = $regs[ $spot->id . '|' . $date ] ?? array();
 				$people = array();
 				foreach ( $list as $reg ) {
-					$person = array( 'name' => $reg->display_name );
+					$person = array(
+						'name' => $reg->display_name,
+						'note' => '' === $spot->note_label ? '' : (string) $reg->note,
+					);
 					if ( $include_emails ) {
 						$person['id']    = (int) $reg->id;
 						$person['email'] = $reg->email;
@@ -49,6 +52,7 @@ class Occurrences {
 					'title'       => $spot->title,
 					'description' => $spot->description,
 					'location'    => $spot->location,
+					'note_label'  => $spot->note_label,
 					'all_day'     => $spot->all_day,
 					'start'       => $start->format( DATE_ATOM ),
 					'end'         => $end->format( DATE_ATOM ),

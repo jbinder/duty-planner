@@ -93,6 +93,8 @@ class Shortcode {
 				'nameHelp'     => __( 'Shown publicly in the calendar.', 'duty-planner' ),
 				'email'        => __( 'Your email', 'duty-planner' ),
 				'emailHelp'    => __( 'Only used for your confirmation and reminders – never shown.', 'duty-planner' ),
+				'optional'     => __( '(optional)', 'duty-planner' ),
+				'noteHelp'     => __( 'Shown publicly next to your name.', 'duty-planner' ),
 				'submit'       => __( 'Sign up', 'duty-planner' ),
 				'sending'      => __( 'Sending…', 'duty-planner' ),
 				'restricted'   => __( 'Sign-up is limited to approved email addresses.', 'duty-planner' ),

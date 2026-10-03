@@ -96,6 +96,7 @@ class Admin {
 			'max_people'            => 2,
 			'reminder_offset_hours' => (int) Settings::get( 'default_reminder_hours' ),
 			'allowlist'             => '',
+			'note_label'            => '',
 			'active'                => true,
 		);
 		$values = $spot ? array_merge( $defaults, array_filter( (array) $spot, static function ( $v ) { return null !== $v; } ) ) : $defaults;
@@ -146,6 +147,7 @@ class Admin {
 			'max_people'            => absint( $in['max_people'] ?? 0 ),
 			'reminder_offset_hours' => min( 720, absint( $in['reminder_offset_hours'] ?? 0 ) ),
 			'allowlist'             => Allowlist::sanitize( (string) ( $in['allowlist'] ?? '' ) ),
+			'note_label'            => mb_substr( sanitize_text_field( $in['note_label'] ?? '' ), 0, 190 ),
 			'active'                => empty( $in['active'] ) ? 0 : 1,
 		);
 
@@ -205,6 +207,7 @@ class Admin {
 			array(
 				'bypass_allowlist' => true,
 				'notify'           => ! empty( $in['notify'] ),
+				'note'             => (string) ( $in['note'] ?? '' ),
 			)
 		);
 		if ( is_wp_error( $reg ) ) {

@@ -30,6 +30,7 @@ class Repository {
 		$row->reminder_offset_hours = (int) $row->reminder_offset_hours;
 		$row->allowlist             = (string) $row->allowlist;
 		$row->description           = (string) $row->description;
+		$row->note_label            = (string) ( $row->note_label ?? '' );
 		$row->active                = (bool) $row->active;
 		return $row;
 	}
@@ -155,7 +156,7 @@ class Repository {
 		);
 	}
 
-	public static function insert_registration( int $spot_id, string $date, string $name, string $email ): int {
+	public static function insert_registration( int $spot_id, string $date, string $name, string $email, string $note = '' ): int {
 		global $wpdb;
 		$ok = $wpdb->insert(
 			self::table( 'registrations' ),
@@ -164,6 +165,7 @@ class Repository {
 				'occurrence_date' => $date,
 				'display_name'    => $name,
 				'email'           => $email,
+				'note'            => $note,
 				'created_at'      => current_time( 'mysql', true ),
 			)
 		);

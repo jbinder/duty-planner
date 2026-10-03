@@ -394,7 +394,7 @@
 				el( 'div', { class: 'dp-card-meta', text: [ item.time_label, item.location ].filter( Boolean ).join( ' · ' ) } ),
 				item.skipped ? null : fillBar( item ),
 				item.people.length ? el( 'div', { class: 'dp-card-people', text: item.people.map( function ( p ) {
-					return p.name;
+					return p.note ? p.name + ' (' + p.note + ')' : p.name;
 				} ).join( ', ' ) } ) : null,
 			] ),
 			this.canRegister( item ) ? el( 'button', { type: 'button', class: 'dp-btn dp-btn-primary', text: t.submit, onclick: open } ) : null,
@@ -422,7 +422,10 @@
 
 		var people = item.people.length
 			? el( 'ul', { class: 'dp-people' }, item.people.map( function ( p ) {
-				return el( 'li', { text: p.name } );
+				return el( 'li', null, [
+					p.name,
+					p.note ? el( 'span', { class: 'dp-person-note', text: ' – ' + p.note } ) : null,
+				] );
 			} ) )
 			: el( 'p', { class: 'dp-muted', text: t.nobody } );
 
@@ -477,6 +480,7 @@
 		var uid = 'dp-' + item.spot_id + '-' + item.date;
 		var name = el( 'input', { type: 'text', id: uid + '-name', name: 'name', required: true, maxlength: '60', autocomplete: 'name', value: this.contact.name } );
 		var email = el( 'input', { type: 'email', id: uid + '-email', name: 'email', required: true, autocomplete: 'email', value: this.contact.email } );
+		var noteInput = item.note_label ? el( 'input', { type: 'text', id: uid + '-note', name: 'note', maxlength: '200', autocomplete: 'off' } ) : null;
 		var honeypot = el( 'input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off' } );
 		var submit = el( 'button', { type: 'submit', class: 'dp-btn dp-btn-primary', text: t.submit } );
 		var msg = el( 'p', { class: 'dp-message', role: 'alert', hidden: true } );
@@ -494,6 +498,11 @@
 				email,
 				el( 'small', { text: t.emailHelp } ),
 			] ),
+			noteInput ? el( 'div', { class: 'dp-field' }, [
+				el( 'label', { for: uid + '-note' }, [ item.note_label + ' ', el( 'span', { class: 'dp-optional', text: t.optional } ) ] ),
+				noteInput,
+				el( 'small', { text: t.noteHelp } ),
+			] ) : null,
 			el( 'div', { class: 'dp-hp', 'aria-hidden': 'true' }, [ el( 'label', { text: 'Website' } ), honeypot ] ),
 			msg,
 			el( 'div', { class: 'dp-actions' }, [ submit ] ),
@@ -517,6 +526,7 @@
 					date: item.date,
 					name: self.contact.name,
 					email: self.contact.email,
+					note: noteInput ? noteInput.value.trim() : '',
 					website: honeypot.value,
 					nonce: self.nonce,
 				} ),

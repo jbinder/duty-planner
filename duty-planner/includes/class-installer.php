@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Installer {
 
-	const DB_VERSION = '1';
+	const DB_VERSION = '2';
 
 	public static function activate() {
 		self::create_tables();
@@ -52,6 +52,7 @@ class Installer {
   max_people smallint(5) unsigned NOT NULL DEFAULT 1,
   reminder_offset_hours smallint(5) unsigned NOT NULL DEFAULT 24,
   allowlist text NULL,
+  note_label varchar(190) NOT NULL DEFAULT '',
   active tinyint(1) NOT NULL DEFAULT 1,
   created_at datetime NOT NULL,
   PRIMARY KEY  (id)
@@ -65,6 +66,7 @@ class Installer {
   occurrence_date date NOT NULL,
   display_name varchar(100) NOT NULL DEFAULT '',
   email varchar(190) NOT NULL DEFAULT '',
+  note varchar(500) NOT NULL DEFAULT '',
   reminder_sent_at datetime NULL DEFAULT NULL,
   created_at datetime NOT NULL,
   PRIMARY KEY  (id),
