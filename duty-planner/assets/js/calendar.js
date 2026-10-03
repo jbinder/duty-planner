@@ -115,6 +115,13 @@
 		return ! item.skipped && +item.max !== 1;
 	}
 
+	// The description arrives as HTML that the server already filtered with wp_kses.
+	function descriptionNode( html ) {
+		var node = el( 'div', { class: 'dp-description' } );
+		node.innerHTML = html;
+		return node;
+	}
+
 	function fillBar( item ) {
 		if ( ! showCount( item ) ) {
 			return null;
@@ -448,7 +455,7 @@
 				acc.push( el( 'dt', { text: row[ 0 ] } ), el( 'dd', { text: row[ 1 ] } ) );
 				return acc;
 			}, [] ) ),
-			item.description ? el( 'p', { class: 'dp-description', text: item.description } ) : null,
+			item.description ? descriptionNode( item.description ) : null,
 			item.skipped ? null : fillBar( item ),
 			item.skipped ? null : el( 'h4', { class: 'dp-subtitle', text: t.signedUp } ),
 			item.skipped ? null : people,

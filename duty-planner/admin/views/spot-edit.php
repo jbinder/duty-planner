@@ -27,7 +27,25 @@ $weekday_names = Time::weekday_names();
 			</tr>
 			<tr>
 				<th scope="row"><label for="dp-description"><?php esc_html_e( 'Description', 'duty-planner' ); ?></label></th>
-				<td><textarea id="dp-description" name="description" class="large-text" rows="3"><?php echo esc_textarea( $values['description'] ); ?></textarea></td>
+				<td>
+					<?php
+					wp_editor(
+						$values['description'],
+						'dp-description',
+						array(
+							'textarea_name' => 'description',
+							'textarea_rows' => 8,
+							'media_buttons' => false,
+							'teeny'         => true,
+							'tinymce'       => array(
+								'toolbar1' => 'bold,italic,bullist,numlist,link,unlink,undo,redo',
+							),
+							'quicktags'     => array( 'buttons' => 'strong,em,ul,ol,li,link' ),
+						)
+					);
+					?>
+					<p class="description"><?php esc_html_e( 'Shown in the sign-up dialog. You can use bold, italic, lists and links.', 'duty-planner' ); ?></p>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row"><label for="dp-location"><?php esc_html_e( 'Location', 'duty-planner' ); ?></label></th>

@@ -50,7 +50,7 @@ class Occurrences {
 					'spot_id'     => $spot->id,
 					'date'        => $date,
 					'title'       => $spot->title,
-					'description' => $spot->description,
+					'description' => Formatting::description_html( $spot->description ),
 					'location'    => $spot->location,
 					'note_label'  => $spot->note_label,
 					'all_day'     => $spot->all_day,

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Duty Planner
  * Description:       Plan recurring duties ("spots"), let people sign up, send reminders and alert admins about duties that still need people.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * License:           GPL-2.0-or-later
@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DUTYPLAN_VERSION', '1.3.0' );
+define( 'DUTYPLAN_VERSION', '1.4.0' );
 define( 'DUTYPLAN_FILE', __FILE__ );
 define( 'DUTYPLAN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DUTYPLAN_URL', plugin_dir_url( __FILE__ ) );
@@ -22,6 +22,7 @@ foreach ( array(
 	'settings',
 	'i18n',
 	'time',
+	'formatting',
 	'recurrence',
 	'repository',
 	'allowlist',

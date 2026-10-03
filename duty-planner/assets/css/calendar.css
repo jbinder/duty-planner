@@ -514,7 +514,38 @@
 
 .dp-description {
 	margin: 0 0 10px;
-	white-space: pre-line;
+	overflow-wrap: anywhere;
+}
+
+.dp-description > :first-child {
+	margin-top: 0;
+}
+
+.dp-description p,
+.dp-description ul,
+.dp-description ol,
+.dp-description blockquote {
+	margin: 0 0 8px;
+}
+
+.dp-description ul,
+.dp-description ol {
+	padding-left: 1.4em;
+}
+
+.dp-description li {
+	margin: 2px 0;
+}
+
+.dp-description h4,
+.dp-description h5 {
+	margin: 12px 0 4px;
+	font-size: 1em;
+}
+
+.dp-description a {
+	color: inherit;
+	text-decoration: underline;
 }
 
 .dp-subtitle {

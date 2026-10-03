@@ -133,7 +133,7 @@ class Admin {
 
 		$data = array(
 			'title'                 => sanitize_text_field( $in['title'] ?? '' ),
-			'description'           => sanitize_textarea_field( $in['description'] ?? '' ),
+			'description'           => Formatting::sanitize_description( (string) ( $in['description'] ?? '' ) ),
 			'location'              => sanitize_text_field( $in['location'] ?? '' ),
 			'frequency'             => ( $in['frequency'] ?? '' ) === 'daily' ? 'daily' : 'weekly',
 			'weekdays'              => $weekdays,
