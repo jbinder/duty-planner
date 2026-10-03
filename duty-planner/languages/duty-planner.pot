@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T05:15:52+00:00\n"
+"POT-Creation-Date: 2026-10-03T05:21:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: duty-planner\n"
@@ -1062,7 +1062,9 @@ msgid ""
 "Can't make it? Please cancel here so someone else can take over:\n"
 "{cancel_url}\n"
 "\n"
-"Calendar: {calendar_url}"
+"Calendar: {calendar_url}\n"
+"\n"
+"{stats}"
 msgstr ""
 
 #: includes/class-mailer.php:21
@@ -1144,35 +1146,63 @@ msgid "Time range, or \"All day\""
 msgstr ""
 
 #: includes/class-mailer.php:52
-msgid "Note the registrant left (if the duty has a note field)"
+msgid "How often the person has already done each duty, with a thank-you (or a welcome for first-timers)"
 msgstr ""
 
 #: includes/class-mailer.php:53
-msgid "Personal cancellation link"
+msgid "Note the registrant left (if the duty has a note field)"
 msgstr ""
 
 #: includes/class-mailer.php:54
-msgid "Link to the calendar page"
+msgid "Personal cancellation link"
 msgstr ""
 
 #: includes/class-mailer.php:55
-msgid "Site title"
+msgid "Link to the calendar page"
 msgstr ""
 
 #: includes/class-mailer.php:56
-msgid "Admin alert only: the period checked"
+msgid "Site title"
 msgstr ""
 
 #: includes/class-mailer.php:57
-msgid "Admin alert only: number of understaffed duties"
+msgid "Admin alert only: the period checked"
 msgstr ""
 
 #: includes/class-mailer.php:58
-msgid "Admin alert only: list of understaffed duties"
+msgid "Admin alert only: number of understaffed duties"
 msgstr ""
 
 #: includes/class-mailer.php:59
+msgid "Admin alert only: list of understaffed duties"
+msgstr ""
+
+#: includes/class-mailer.php:60
 msgid "Admin alert only: link to the schedule screen"
+msgstr ""
+
+#: includes/class-mailer.php:134
+msgid "This is your first duty with us – welcome, and thank you for joining in!"
+msgstr ""
+
+#: includes/class-mailer.php:136
+msgid "Your duties so far"
+msgstr ""
+
+#. translators: 1: duty title, 2: how often
+#: includes/class-mailer.php:139
+#, php-format
+msgid "• %1$s: %2$d×"
+msgstr ""
+
+#. translators: %d: total number of duties done
+#: includes/class-mailer.php:143
+#, php-format
+msgid "Total: %d×"
+msgstr ""
+
+#: includes/class-mailer.php:146
+msgid "Thank you for your help – it really makes a difference!"
 msgstr ""
 
 #: includes/class-privacy.php:18

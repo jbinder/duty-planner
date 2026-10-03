@@ -50,6 +50,8 @@ class Settings {
 				$templates = I18n::with_locale( $locale, array( Mailer::class, 'default_templates' ) );
 				foreach ( $templates as $k => $text ) {
 					$variants[ $k ][] = self::normalize( $text );
+					// Defaults from before the {stats} placeholder existed.
+					$variants[ $k ][] = self::normalize( str_replace( "\n\n{stats}", '', $text ) );
 				}
 			}
 		}

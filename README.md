@@ -14,7 +14,7 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
 - **Languages:** English and German (informal "du"), switchable under *Settings → Language*. Choose a language explicitly or let it follow the WordPress language. The setting covers the calendar, all emails and the plugin's admin screens, including dates and weekday/month names. Email texts you haven't edited switch along; edited texts stay as written.
 - **Allowlist** (optional): addresses or `@domains`, set globally or per spot (a spot's own list overrides the global one).
 - **Emails** (editable templates with placeholders):
-  - confirmation;
+  - confirmation, ending with a small thank-you box: how often the person has already done each duty (past dates, matched by email), or a welcome for first-timers (placeholder `{stats}`);
   - reminder (offset **per spot**; all-day spots count back from a configurable reference time);
   - cancellation;
   - "date cancelled" notice.

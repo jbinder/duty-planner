@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T05:15:52+00:00\n"
+"POT-Creation-Date: 2026-10-03T05:21:35+00:00\n"
 "PO-Revision-Date: 2026-10-03 07:00+0200\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: duty-planner\n"
@@ -1064,8 +1064,10 @@ msgid ""
 "Can't make it? Please cancel here so someone else can take over:\n"
 "{cancel_url}\n"
 "\n"
-"Calendar: {calendar_url}"
-msgstr "Hallo {name},\n\nvielen Dank, dass du dich für „{spot}“ eingetragen hast.\n\nDatum: {date}\nUhrzeit: {time}\nOrt: {location}\n\nWir schicken dir vorher eine Erinnerung.\nDu kannst doch nicht? Bitte trag dich hier aus, damit jemand anderes übernehmen kann:\n{cancel_url}\n\nKalender: {calendar_url}"
+"Calendar: {calendar_url}\n"
+"\n"
+"{stats}"
+msgstr "Hallo {name},\n\nvielen Dank, dass du dich für „{spot}“ eingetragen hast.\n\nDatum: {date}\nUhrzeit: {time}\nOrt: {location}\n\nWir schicken dir vorher eine Erinnerung.\nDu kannst doch nicht? Bitte trag dich hier aus, damit jemand anderes übernehmen kann:\n{cancel_url}\n\nKalender: {calendar_url}\n\n{stats}"
 
 #: includes/class-mailer.php:21
 msgid "Reminder: {spot} on {date}"
@@ -1146,36 +1148,64 @@ msgid "Time range, or \"All day\""
 msgstr "Uhrzeit von–bis oder „Ganztägig“"
 
 #: includes/class-mailer.php:52
+msgid "How often the person has already done each duty, with a thank-you (or a welcome for first-timers)"
+msgstr "Wie oft die Person die einzelnen Dienste schon übernommen hat, mit einem Dankeschön (bzw. einem Willkommen beim ersten Mal)"
+
+#: includes/class-mailer.php:53
 msgid "Note the registrant left (if the duty has a note field)"
 msgstr "Notiz der angemeldeten Person (falls der Dienst ein Notizfeld hat)"
 
-#: includes/class-mailer.php:53
+#: includes/class-mailer.php:54
 msgid "Personal cancellation link"
 msgstr "Persönlicher Abmeldelink"
 
-#: includes/class-mailer.php:54
+#: includes/class-mailer.php:55
 msgid "Link to the calendar page"
 msgstr "Link zur Kalenderseite"
 
-#: includes/class-mailer.php:55
+#: includes/class-mailer.php:56
 msgid "Site title"
 msgstr "Titel der Website"
 
-#: includes/class-mailer.php:56
+#: includes/class-mailer.php:57
 msgid "Admin alert only: the period checked"
 msgstr "Nur Admin-Hinweis: der geprüfte Zeitraum"
 
-#: includes/class-mailer.php:57
+#: includes/class-mailer.php:58
 msgid "Admin alert only: number of understaffed duties"
 msgstr "Nur Admin-Hinweis: Anzahl unterbesetzter Dienste"
 
-#: includes/class-mailer.php:58
+#: includes/class-mailer.php:59
 msgid "Admin alert only: list of understaffed duties"
 msgstr "Nur Admin-Hinweis: Liste der unterbesetzten Dienste"
 
-#: includes/class-mailer.php:59
+#: includes/class-mailer.php:60
 msgid "Admin alert only: link to the schedule screen"
 msgstr "Nur Admin-Hinweis: Link zum Dienstplan"
+
+#: includes/class-mailer.php:134
+msgid "This is your first duty with us – welcome, and thank you for joining in!"
+msgstr "Das ist dein erster Dienst bei uns – herzlich willkommen und danke, dass du mitmachst!"
+
+#: includes/class-mailer.php:136
+msgid "Your duties so far"
+msgstr "Deine bisherigen Dienste"
+
+#. translators: 1: duty title, 2: how often
+#: includes/class-mailer.php:139
+#, php-format
+msgid "• %1$s: %2$d×"
+msgstr "• %1$s: %2$d×"
+
+#. translators: %d: total number of duties done
+#: includes/class-mailer.php:143
+#, php-format
+msgid "Total: %d×"
+msgstr "Insgesamt: %d×"
+
+#: includes/class-mailer.php:146
+msgid "Thank you for your help – it really makes a difference!"
+msgstr "Danke für deine Hilfe – das macht wirklich einen Unterschied!"
 
 #: includes/class-privacy.php:18
 #: includes/class-privacy.php:26
