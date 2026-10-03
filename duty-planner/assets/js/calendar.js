@@ -110,7 +110,15 @@
 		return el( 'span', { class: 'dp-icon', 'aria-hidden': 'true', text: ICONS[ state ] } );
 	}
 
+	// With a single place, "0/1" or "1/1" only confuses – the status already says it.
+	function showCount( item ) {
+		return ! item.skipped && +item.max !== 1;
+	}
+
 	function fillBar( item ) {
+		if ( ! showCount( item ) ) {
+			return null;
+		}
 		var pct = item.max ? Math.min( 100, ( item.count / item.max ) * 100 ) : 0;
 		var bar = el( 'span', { class: 'dp-fill-bar' } );
 		bar.style.width = pct + '%';
@@ -300,7 +308,7 @@
 			icon( state ),
 			el( 'span', { class: 'dp-chip-time', text: item.start_label } ),
 			el( 'span', { class: 'dp-chip-title', text: item.title } ),
-			item.skipped ? null : el( 'span', { class: 'dp-chip-count', text: item.count + '/' + item.max } ),
+			showCount( item ) ? el( 'span', { class: 'dp-chip-count', text: item.count + '/' + item.max } ) : null,
 		] );
 	};
 
