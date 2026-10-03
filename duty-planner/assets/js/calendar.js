@@ -122,6 +122,11 @@
 		return node;
 	}
 
+	// "All day" adds no information, so all-day duties show no time at all.
+	function timeLabel( item ) {
+		return item.all_day ? '' : item.time_label;
+	}
+
 	function fillBar( item ) {
 		if ( ! showCount( item ) ) {
 			return null;
@@ -307,13 +312,13 @@
 		var self = this;
 		var state = stateOf( item );
 		var cls = 'dp-chip dp-state-' + state + ( item.past ? ' dp-past' : '' ) + ( item.all_day ? ' dp-allday' : '' );
-		var label = [ item.title, item.date_label, item.time_label, stateLabel( item ), item.skipped ? '' : fmt( t.places, item.count, item.max ) ]
+		var label = [ item.title, item.date_label, timeLabel( item ), stateLabel( item ), item.skipped ? '' : fmt( t.places, item.count, item.max ) ]
 			.filter( Boolean ).join( ', ' );
 		return el( 'button', { type: 'button', class: cls, 'aria-label': label, onclick: function () {
 			self.openDialog( item );
 		} }, [
 			icon( state ),
-			el( 'span', { class: 'dp-chip-time', text: item.start_label } ),
+			item.all_day ? null : el( 'span', { class: 'dp-chip-time', text: item.start_label } ),
 			el( 'span', { class: 'dp-chip-title', text: item.title } ),
 			showCount( item ) ? el( 'span', { class: 'dp-chip-count', text: item.count + '/' + item.max } ) : null,
 		] );
@@ -391,6 +396,7 @@
 	Planner.prototype.card = function ( item ) {
 		var self = this;
 		var state = stateOf( item );
+		var meta = [ timeLabel( item ), item.location ].filter( Boolean ).join( ' · ' );
 		var open = function () {
 			self.openDialog( item );
 		};
@@ -398,7 +404,7 @@
 			el( 'div', { class: 'dp-card-main' }, [
 				el( 'div', { class: 'dp-card-status' }, [ icon( state ), stateLabel( item ), hint( item ) ? el( 'span', { class: 'dp-hint', text: '· ' + hint( item ) } ) : null ] ),
 				el( 'h5', { class: 'dp-card-title' }, [ el( 'button', { type: 'button', class: 'dp-linkbtn', text: item.title, onclick: open } ) ] ),
-				el( 'div', { class: 'dp-card-meta', text: [ item.time_label, item.location ].filter( Boolean ).join( ' · ' ) } ),
+				meta ? el( 'div', { class: 'dp-card-meta', text: meta } ) : null,
 				item.skipped ? null : fillBar( item ),
 				item.people.length ? el( 'div', { class: 'dp-card-people', text: item.people.map( function ( p ) {
 					return p.note ? p.name + ' (' + p.note + ')' : p.name;
@@ -423,7 +429,7 @@
 
 		var rows = [
 			[ t.date, item.date_label ],
-			[ t.time, item.time_label ],
+			item.all_day ? null : [ t.time, item.time_label ],
 			item.location ? [ t.location, item.location ] : null,
 		].filter( Boolean );
 
