@@ -33,6 +33,23 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 		<h2 class="title"><?php esc_html_e( 'General', 'duty-planner' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<tr>
+				<th scope="row"><label for="dp-language"><?php esc_html_e( 'Language', 'duty-planner' ); ?></label></th>
+				<td>
+					<select id="dp-language" name="<?php echo esc_attr( $field( 'language' ) ); ?>">
+						<option value="" <?php selected( $settings['language'], '' ); ?>>
+							<?php
+							/* translators: %s: language name, e.g. "English" */
+							printf( esc_html__( 'Same as WordPress (currently %s)', 'duty-planner' ), esc_html( I18n::languages()[ I18n::closest( get_locale() ) ] ) );
+							?>
+						</option>
+						<?php foreach ( I18n::languages() as $locale => $name ) : ?>
+							<option value="<?php echo esc_attr( $locale ); ?>" <?php selected( $settings['language'], $locale ); ?>><?php echo esc_html( $name ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<p class="description"><?php esc_html_e( 'Language of the public calendar, the emails and these admin screens. Email texts you have not changed switch along; texts you edited stay as they are.', 'duty-planner' ); ?></p>
+				</td>
+			</tr>
+			<tr>
 				<th scope="row"><label for="dp-page"><?php esc_html_e( 'Calendar page', 'duty-planner' ); ?></label></th>
 				<td>
 					<?php
@@ -169,7 +186,7 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 			</tr>
 		</table>
 
-		<?php submit_button(); ?>
+		<?php submit_button( __( 'Save Changes', 'duty-planner' ) ); ?>
 	</form>
 
 	<hr>
@@ -177,12 +194,12 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 	<ul class="dutyplan-status">
 		<li>
 			<?php esc_html_e( 'Next background check:', 'duty-planner' ); ?>
-			<strong><?php echo $next_run ? esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $next_run ) ) : esc_html__( 'not scheduled', 'duty-planner' ); ?></strong>
+			<strong><?php echo $next_run ? esc_html( Time::format_datetime( (int) $next_run ) ) : esc_html__( 'not scheduled', 'duty-planner' ); ?></strong>
 			<span class="description"><?php esc_html_e( '(runs every 15 minutes via WP-Cron; on low-traffic sites set up a real cron job calling wp-cron.php)', 'duty-planner' ); ?></span>
 		</li>
 		<li>
 			<?php esc_html_e( 'Alert this week:', 'duty-planner' ); ?>
-			<strong><?php echo esc_html( wp_date( 'l, ' . get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $window['moment']->getTimestamp() ) ); ?></strong>
+			<strong><?php echo esc_html( Time::format_datetime( $window['moment']->getTimestamp(), true ) ); ?></strong>
 			<?php if ( $last_alert === $window['week'] ) : ?>
 				<span class="description"><?php esc_html_e( '(already done)', 'duty-planner' ); ?></span>
 			<?php endif; ?>

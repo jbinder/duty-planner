@@ -85,7 +85,7 @@ class Mailer {
 		return array(
 			'name'       => $reg->display_name,
 			'spot'       => $spot->title,
-			'date'       => Time::format_date( $reg->occurrence_date, 'l, ' . get_option( 'date_format' ) ),
+			'date'       => Time::format_long_date( $reg->occurrence_date ),
 			'time'       => Time::format_time_range( $spot, $reg->occurrence_date ),
 			'location'   => $spot->location ?: '–',
 			'cancel_url' => Registration_Service::cancel_url( $reg ),

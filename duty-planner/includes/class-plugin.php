@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 class Plugin {
 
 	public static function init() {
-		load_plugin_textdomain( 'duty-planner', false, dirname( plugin_basename( DUTYPLAN_FILE ) ) . '/languages' );
+		I18n::init();
 
 		Installer::maybe_upgrade();
 		Scheduler::init();

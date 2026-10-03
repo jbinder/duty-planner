@@ -12,6 +12,7 @@ class Settings {
 
 	public static function defaults(): array {
 		return array(
+			'language'               => '',
 			'calendar_page_id'       => 0,
 			'unlisted'               => 0,
 			'from_name'              => '',
@@ -28,8 +29,36 @@ class Settings {
 	}
 
 	public static function all(): array {
-		$saved = get_option( self::OPTION, array() );
-		return array_merge( self::defaults(), is_array( $saved ) ? $saved : array() );
+		$saved    = get_option( self::OPTION, array() );
+		$defaults = self::defaults();
+		$all      = array_merge( $defaults, is_array( $saved ) ? $saved : array() );
+		// Unchanged email templates follow the plugin language.
+		foreach ( Mailer::default_templates() as $key => $default ) {
+			if ( self::is_default_template( $key, (string) $all[ $key ] ) ) {
+				$all[ $key ] = $default;
+			}
+		}
+		return $all;
+	}
+
+	/** Whether a template text is empty or one of the shipped defaults (in any language). */
+	public static function is_default_template( string $key, string $value ): bool {
+		static $variants = null;
+		if ( null === $variants ) {
+			$variants = array();
+			foreach ( array_keys( I18n::languages() ) as $locale ) {
+				$templates = I18n::with_locale( $locale, array( Mailer::class, 'default_templates' ) );
+				foreach ( $templates as $k => $text ) {
+					$variants[ $k ][] = self::normalize( $text );
+				}
+			}
+		}
+		$value = self::normalize( $value );
+		return '' === $value || in_array( $value, $variants[ $key ] ?? array(), true );
+	}
+
+	private static function normalize( string $text ): string {
+		return trim( str_replace( "\r\n", "\n", $text ) );
 	}
 
 	/**
@@ -58,6 +87,7 @@ class Settings {
 		$def = self::defaults();
 		$out = array();
 
+		$out['language']               = isset( I18n::languages()[ $in['language'] ?? '' ] ) ? $in['language'] : '';
 		$out['calendar_page_id']       = absint( $in['calendar_page_id'] ?? 0 );
 		$out['unlisted']               = empty( $in['unlisted'] ) ? 0 : 1;
 		$out['from_name']              = sanitize_text_field( $in['from_name'] ?? '' );
@@ -76,10 +106,11 @@ class Settings {
 		$out['allowlist']   = Allowlist::sanitize( (string) ( $in['allowlist'] ?? '' ) );
 		$out['delete_data'] = empty( $in['delete_data'] ) ? 0 : 1;
 
-		foreach ( Mailer::default_templates() as $key => $default ) {
+		foreach ( array_keys( Mailer::default_templates() ) as $key ) {
 			$value       = (string) ( $in[ $key ] ?? '' );
 			$value       = substr( $key, -8 ) === '_subject' ? sanitize_text_field( $value ) : sanitize_textarea_field( $value );
-			$out[ $key ] = '' === trim( $value ) ? $default : $value;
+			// Store defaults as empty, so they keep following the language setting.
+			$out[ $key ] = self::is_default_template( $key, $value ) ? '' : $value;
 		}
 
 		return $out;

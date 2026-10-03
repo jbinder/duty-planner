@@ -1,0 +1,1368 @@
+# German translation for Duty Planner.
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Duty Planner 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/duty-planner\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-03T04:54:42+00:00\n"
+"PO-Revision-Date: 2026-10-03 07:00+0200\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: duty-planner\n"
+
+#. Plugin Name of the plugin
+#: duty-planner.php
+#: admin/class-admin.php:26
+msgid "Duty Planner"
+msgstr "Dienstplaner"
+
+#. Description of the plugin
+#: duty-planner.php
+msgid "Plan recurring duties (\"spots\"), let people sign up, send reminders and alert admins about duties that still need people."
+msgstr "Plane wiederkehrende Dienste, lass Leute sich eintragen, verschicke Erinnerungen und benachrichtige Admins über Dienste, für die noch Leute fehlen."
+
+#: admin/class-admin.php:27
+#: admin/class-spots-list-table.php:53
+#: admin/views/schedule.php:23
+msgid "Schedule"
+msgstr "Dienstplan"
+
+#: admin/class-admin.php:28
+#: admin/views/spots.php:13
+msgid "Spots"
+msgstr "Dienste"
+
+#: admin/class-admin.php:29
+#: admin/views/schedule.php:24
+#: admin/views/spot-edit.php:16
+#: admin/views/spots.php:14
+msgid "Add spot"
+msgstr "Dienst hinzufügen"
+
+#: admin/class-admin.php:30
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: admin/class-admin.php:80
+msgid "Spot not found."
+msgstr "Dienst nicht gefunden."
+
+#: admin/class-admin.php:154
+msgid "Please enter a title."
+msgstr "Bitte gib einen Titel ein."
+
+#: admin/class-admin.php:157
+msgid "Please enter a valid start date."
+msgstr "Bitte gib ein gültiges Startdatum ein."
+
+#: admin/class-admin.php:160
+msgid "The end date must be a valid date after the start date."
+msgstr "Das Enddatum muss ein gültiges Datum nach dem Startdatum sein."
+
+#: admin/class-admin.php:163
+msgid "Please select at least one weekday."
+msgstr "Bitte wähle mindestens einen Wochentag aus."
+
+#: admin/class-admin.php:166
+msgid "Please enter a start time and a duration, or mark the spot as all-day."
+msgstr "Bitte gib eine Startzeit und eine Dauer ein oder markiere den Dienst als ganztägig."
+
+#: admin/class-admin.php:169
+msgid "The maximum number of people must be at least 1."
+msgstr "Die Höchstzahl an Personen muss mindestens 1 sein."
+
+#: admin/class-admin.php:172
+msgid "The minimum cannot be larger than the maximum."
+msgstr "Das Minimum darf nicht größer als das Maximum sein."
+
+#: admin/class-admin.php:185
+msgid "Spot saved."
+msgstr "Dienst gespeichert."
+
+#: admin/class-admin.php:194
+msgid "Spot deleted."
+msgstr "Dienst gelöscht."
+
+#. translators: %s: display name
+#: admin/class-admin.php:214
+#, php-format
+msgid "%s has been added."
+msgstr "%s wurde eingetragen."
+
+#. translators: %s: display name
+#: admin/class-admin.php:223
+#, php-format
+msgid "%s has been removed."
+msgstr "%s wurde entfernt."
+
+#. translators: %d: number of people notified
+#: admin/class-admin.php:247
+#, php-format
+msgid "Date cancelled. %d person was notified."
+msgid_plural "Date cancelled. %d people were notified."
+msgstr[0] "Termin abgesagt. %d Person wurde benachrichtigt."
+msgstr[1] "Termin abgesagt. %d Personen wurden benachrichtigt."
+
+#: admin/class-admin.php:257
+msgid "Date restored."
+msgstr "Termin wiederhergestellt."
+
+#: admin/class-admin.php:264
+msgid "Please configure at least one alert recipient first."
+msgstr "Bitte lege zuerst mindestens einen Empfänger für den Hinweis fest."
+
+#. translators: 1: number of duties, 2: period
+#: admin/class-admin.php:271
+#, php-format
+msgid "Alert sent, listing %1$d understaffed duties for %2$s."
+msgstr "Hinweis gesendet: %1$d unterbesetzte Dienste im Zeitraum %2$s."
+
+#. translators: %s: period
+#: admin/class-admin.php:274
+#, php-format
+msgid "All duties for %s have reached their minimum – no alert needed."
+msgstr "Alle Dienste im Zeitraum %s haben ihr Minimum erreicht – kein Hinweis nötig."
+
+#. translators: %d: interval in days
+#: admin/class-admin.php:294
+msgid "Every day"
+msgstr "Täglich"
+
+#. translators: %d: interval in days
+#: admin/class-admin.php:294
+#, php-format
+msgid "Every %d days"
+msgstr "Alle %d Tage"
+
+#. translators: 1: weekdays, 2: interval in weeks
+#: admin/class-admin.php:301
+#, php-format
+msgid "Weekly on %1$s"
+msgstr "Wöchentlich am %1$s"
+
+#. translators: 1: weekdays, 2: interval in weeks
+#: admin/class-admin.php:301
+#, php-format
+msgid "Every %2$d weeks on %1$s"
+msgstr "Alle %2$d Wochen am %1$s"
+
+#. translators: %s: date
+#: admin/class-admin.php:304
+#, php-format
+msgid "from %s"
+msgstr "ab %s"
+
+#. translators: %s: date
+#: admin/class-admin.php:307
+#, php-format
+msgid "until %s"
+msgstr "bis %s"
+
+#. translators: 1: shortcode, 2: settings link
+#: admin/class-admin.php:324
+#, php-format
+msgid "Public calendar: <strong>no page selected.</strong> Create a page with %1$s and choose it in the <a href=\"%2$s\">settings</a>."
+msgstr "Öffentlicher Kalender: <strong>keine Seite ausgewählt.</strong> Erstelle eine Seite mit %1$s und wähle sie in den <a href=\"%2$s\">Einstellungen</a> aus."
+
+#: admin/class-admin.php:334
+msgid "Public calendar:"
+msgstr "Öffentlicher Kalender:"
+
+#: admin/class-admin.php:339
+msgid "Copied!"
+msgstr "Kopiert!"
+
+#: admin/class-admin.php:340
+msgid "Copy link"
+msgstr "Link kopieren"
+
+#: admin/class-admin.php:345
+msgid "The page is not published yet, so visitors cannot open it."
+msgstr "Die Seite ist noch nicht veröffentlicht, Besucher können sie also nicht öffnen."
+
+#: admin/class-admin.php:347
+msgid "The page is password protected."
+msgstr "Die Seite ist passwortgeschützt."
+
+#: admin/class-admin.php:350
+msgid "The [duty_planner] shortcode was not found on this page. Add it there, e.g. with a Shortcode block, or in Elementor with the Shortcode widget."
+msgstr "Der Shortcode [duty_planner] wurde auf dieser Seite nicht gefunden. Füge ihn dort ein, z. B. mit einem Shortcode-Block oder in Elementor mit dem Shortcode-Widget."
+
+#: admin/class-admin.php:353
+msgid "Unlisted – only reachable via this link"
+msgstr "Nicht gelistet – nur über diesen Link erreichbar"
+
+#: admin/class-admin.php:372
+msgid "Duty Planner calendar (unlisted)"
+msgstr "Dienstplaner-Kalender (nicht gelistet)"
+
+#: admin/class-admin.php:373
+msgid "Duty Planner calendar"
+msgstr "Dienstplaner-Kalender"
+
+#: admin/class-admin.php:380
+#: includes/class-shortcode.php:71
+msgid "Cancelled"
+msgstr "Abgesagt"
+
+#: admin/class-admin.php:383
+#: includes/class-shortcode.php:68
+msgid "Needs people"
+msgstr "Leute gesucht"
+
+#: admin/class-admin.php:384
+#: includes/class-shortcode.php:69
+msgid "Places free"
+msgstr "Plätze frei"
+
+#: admin/class-admin.php:385
+#: includes/class-shortcode.php:70
+msgid "Fully booked"
+msgstr "Ausgebucht"
+
+#: admin/class-admin.php:409
+msgid "You are not allowed to do this."
+msgstr "Dazu bist du nicht berechtigt."
+
+#: admin/class-spots-list-table.php:27
+#: admin/views/spot-edit.php:25
+msgid "Title"
+msgstr "Titel"
+
+#: admin/class-spots-list-table.php:28
+msgid "Recurrence"
+msgstr "Wiederholung"
+
+#: admin/class-spots-list-table.php:29
+#: admin/views/settings.php:131
+#: admin/views/spot-edit.php:84
+#: includes/class-shortcode.php:78
+msgid "Time"
+msgstr "Uhrzeit"
+
+#: admin/class-spots-list-table.php:30
+msgid "People (min–max)"
+msgstr "Personen (min.–max.)"
+
+#: admin/class-spots-list-table.php:31
+#: admin/views/settings.php:19
+#: admin/views/spot-edit.php:127
+msgid "Reminder"
+msgstr "Erinnerung"
+
+#: admin/class-spots-list-table.php:32
+msgid "Sign-up"
+msgstr "Anmeldung"
+
+#: admin/class-spots-list-table.php:42
+msgid "No spots yet. Create your first one!"
+msgstr "Noch keine Dienste. Lege deinen ersten an!"
+
+#: admin/class-spots-list-table.php:52
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: admin/class-spots-list-table.php:57
+msgid "Delete this spot including all registrations? This cannot be undone."
+msgstr "Diesen Dienst inklusive aller Anmeldungen löschen? Das kann nicht rückgängig gemacht werden."
+
+#: admin/class-spots-list-table.php:58
+msgid "Delete"
+msgstr "Löschen"
+
+#: admin/class-spots-list-table.php:61
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: admin/class-spots-list-table.php:72
+#: includes/class-time.php:74
+#: includes/class-time.php:81
+msgid "All day"
+msgstr "Ganztägig"
+
+#. translators: 1: start time, 2: duration in minutes
+#: admin/class-spots-list-table.php:75
+#, php-format
+msgid "%1$s (%2$d min)"
+msgstr "%1$s (%2$d Min.)"
+
+#: admin/class-spots-list-table.php:84
+msgid "Off"
+msgstr "Aus"
+
+#. translators: %d: hours
+#: admin/class-spots-list-table.php:87
+#, php-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d Stunde vorher"
+msgstr[1] "%d Stunden vorher"
+
+#: admin/class-spots-list-table.php:92
+msgid "Own allowlist"
+msgstr "Eigene Freigabeliste"
+
+#: admin/class-spots-list-table.php:95
+msgid "Global allowlist"
+msgstr "Globale Freigabeliste"
+
+#: admin/class-spots-list-table.php:97
+msgid "Open"
+msgstr "Offen"
+
+#: admin/views/schedule.php:30
+msgid "Previous period"
+msgstr "Vorheriger Zeitraum"
+
+#: admin/views/schedule.php:31
+#: includes/class-shortcode.php:75
+msgid "Today"
+msgstr "Heute"
+
+#: admin/views/schedule.php:32
+msgid "Next period"
+msgstr "Nächster Zeitraum"
+
+#: admin/views/schedule.php:37
+msgid "From"
+msgstr "Ab"
+
+#: admin/views/schedule.php:38
+msgid "Period"
+msgstr "Zeitraum"
+
+#: admin/views/schedule.php:39
+msgid "1 week"
+msgstr "1 Woche"
+
+#: admin/views/schedule.php:39
+msgid "2 weeks"
+msgstr "2 Wochen"
+
+#: admin/views/schedule.php:39
+msgid "4 weeks"
+msgstr "4 Wochen"
+
+#: admin/views/schedule.php:39
+msgid "8 weeks"
+msgstr "8 Wochen"
+
+#: admin/views/schedule.php:43
+msgid "Spot"
+msgstr "Dienst"
+
+#: admin/views/schedule.php:44
+msgid "All spots"
+msgstr "Alle Dienste"
+
+#: admin/views/schedule.php:49
+msgid "Show"
+msgstr "Anzeigen"
+
+#. translators: %d: count
+#: admin/views/schedule.php:54
+#, php-format
+msgid "%d need people"
+msgstr "%d unterbesetzt"
+
+#. translators: %d: count
+#: admin/views/schedule.php:55
+#, php-format
+msgid "%d with places free"
+msgstr "%d mit freien Plätzen"
+
+#. translators: %d: count
+#: admin/views/schedule.php:56
+#, php-format
+msgid "%d fully booked"
+msgstr "%d ausgebucht"
+
+#: admin/views/schedule.php:60
+#: includes/class-shortcode.php:104
+msgid "No duties in this period."
+msgstr "Keine Dienste in diesem Zeitraum."
+
+#: admin/views/schedule.php:65
+#: admin/views/spot-edit.php:42
+msgid "When"
+msgstr "Wann"
+
+#: admin/views/schedule.php:66
+#: admin/views/spot-edit.php:22
+#: includes/class-privacy.php:41
+msgid "Duty"
+msgstr "Dienst"
+
+#: admin/views/schedule.php:67
+#: admin/views/settings.php:193
+#: admin/views/spot-edit.php:37
+msgid "Status"
+msgstr "Status"
+
+#: admin/views/schedule.php:68
+#: admin/views/spot-edit.php:97
+msgid "People"
+msgstr "Personen"
+
+#: admin/views/schedule.php:69
+msgid "Actions"
+msgstr "Aktionen"
+
+#. translators: 1: signed up, 2: max, 3: min
+#: admin/views/schedule.php:97
+#, php-format
+msgid "%1$d / %2$d (min. %3$d)"
+msgstr "%1$d / %2$d (min. %3$d)"
+
+#: admin/views/schedule.php:113
+msgid "Remove this person? They will receive a cancellation email."
+msgstr "Diese Person austragen? Sie bekommt eine Absage per E-Mail."
+
+#: admin/views/schedule.php:113
+msgid "Remove"
+msgstr "Austragen"
+
+#: admin/views/schedule.php:119
+msgid "Nobody yet"
+msgstr "Noch niemand"
+
+#: admin/views/schedule.php:124
+msgid "Add person"
+msgstr "Person eintragen"
+
+#: admin/views/schedule.php:129
+msgid "Name"
+msgstr "Name"
+
+#: admin/views/schedule.php:130
+#: includes/class-privacy.php:44
+msgid "Email"
+msgstr "E-Mail"
+
+#: admin/views/schedule.php:131
+msgid "Send confirmation"
+msgstr "Bestätigung senden"
+
+#: admin/views/schedule.php:132
+msgid "Add"
+msgstr "Eintragen"
+
+#: admin/views/schedule.php:143
+msgid "Restore date"
+msgstr "Termin wiederherstellen"
+
+#: admin/views/schedule.php:150
+msgid "Cancel this date? Everyone signed up will be notified and removed."
+msgstr "Diesen Termin absagen? Alle Eingetragenen werden benachrichtigt und ausgetragen."
+
+#: admin/views/schedule.php:150
+msgid "Cancel date"
+msgstr "Termin absagen"
+
+#: admin/views/settings.php:18
+msgid "Confirmation (after sign-up)"
+msgstr "Bestätigung (nach der Anmeldung)"
+
+#: admin/views/settings.php:20
+msgid "Cancellation"
+msgstr "Abmeldung"
+
+#: admin/views/settings.php:21
+msgid "Date cancelled by admin"
+msgstr "Termin vom Admin abgesagt"
+
+#: admin/views/settings.php:22
+msgid "Admin alert: duties need people"
+msgstr "Admin-Hinweis: Dienste brauchen Leute"
+
+#: admin/views/settings.php:28
+msgid "Duty Planner settings"
+msgstr "Dienstplaner-Einstellungen"
+
+#: admin/views/settings.php:33
+msgid "General"
+msgstr "Allgemein"
+
+#: admin/views/settings.php:36
+msgid "Language"
+msgstr "Sprache"
+
+#. translators: %s: language name, e.g. "English"
+#: admin/views/settings.php:42
+#, php-format
+msgid "Same as WordPress (currently %s)"
+msgstr "Wie WordPress (derzeit %s)"
+
+#: admin/views/settings.php:49
+msgid "Language of the public calendar, the emails and these admin screens. Email texts you have not changed switch along; texts you edited stay as they are."
+msgstr "Sprache des öffentlichen Kalenders, der E-Mails und dieser Admin-Seiten. Unveränderte E-Mail-Texte wechseln mit; Texte, die du angepasst hast, bleiben, wie sie sind."
+
+#: admin/views/settings.php:53
+msgid "Calendar page"
+msgstr "Kalenderseite"
+
+#: admin/views/settings.php:61
+msgid "— Home page —"
+msgstr "— Startseite —"
+
+#: admin/views/settings.php:66
+msgid "Choosing a page does not add anything to it. First put the [duty_planner] shortcode on the page (block editor: Shortcode block; Elementor: Shortcode widget), then select it here. The plugin uses it for the links in emails, the unlisted option and the link shown in the admin."
+msgstr "Die Auswahl fügt der Seite nichts hinzu. Setze zuerst den Shortcode [duty_planner] auf die Seite (Block-Editor: Shortcode-Block; Elementor: Shortcode-Widget) und wähle sie dann hier aus. Das Plugin nutzt sie für die Links in E-Mails, die Option „nicht gelistet“ und den Link im Admin-Bereich."
+
+#: admin/views/settings.php:71
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
+#: admin/views/settings.php:73
+msgid "Keep the calendar page unlisted"
+msgstr "Kalenderseite nicht listen"
+
+#: admin/views/settings.php:74
+msgid "Hides the page from automatic page menus, site search, the sitemap and search engines (noindex). It stays reachable for everyone who has the link – this is not access control; use the allowlist to restrict sign-ups. Menus you built by hand are not changed."
+msgstr "Blendet die Seite in automatischen Seitenmenüs, der Website-Suche, der Sitemap und bei Suchmaschinen (noindex) aus. Wer den Link hat, kann sie weiterhin öffnen – das ist kein Zugriffsschutz; nutze die Freigabeliste, um Anmeldungen einzuschränken. Selbst gebaute Menüs werden nicht verändert."
+
+#: admin/views/settings.php:76
+msgid "Select the calendar page above, otherwise there is nothing to hide."
+msgstr "Wähle oben die Kalenderseite aus, sonst gibt es nichts auszublenden."
+
+#: admin/views/settings.php:81
+msgid "Sender name"
+msgstr "Absendername"
+
+#: admin/views/settings.php:85
+msgid "Sender email"
+msgstr "Absender-E-Mail"
+
+#: admin/views/settings.php:88
+msgid "Optional. Leave empty to use the WordPress default."
+msgstr "Optional. Leer lassen, um die WordPress-Voreinstellung zu verwenden."
+
+#: admin/views/settings.php:93
+msgid "Reminders"
+msgstr "Erinnerungen"
+
+#: admin/views/settings.php:96
+msgid "Default reminder for new spots"
+msgstr "Standard-Erinnerung für neue Dienste"
+
+#: admin/views/settings.php:99
+#: admin/views/spot-edit.php:130
+msgid "hours before the start"
+msgstr "Stunden vor Beginn"
+
+#: admin/views/settings.php:100
+msgid "Each spot has its own reminder setting; this is only the preset for new spots."
+msgstr "Jeder Dienst hat seine eigene Erinnerungseinstellung; dies ist nur die Vorgabe für neue Dienste."
+
+#: admin/views/settings.php:104
+msgid "All-day reference time"
+msgstr "Bezugszeit für ganztägige Dienste"
+
+#: admin/views/settings.php:107
+msgid "Reminders for all-day spots are counted back from this time on the day of the duty."
+msgstr "Erinnerungen für ganztägige Dienste werden ab dieser Uhrzeit am Tag des Dienstes zurückgerechnet."
+
+#: admin/views/settings.php:112
+msgid "Admin alert"
+msgstr "Admin-Hinweis"
+
+#: admin/views/settings.php:113
+msgid "Once a week, the recipients get a summary of all duties that have not reached their minimum number of people. No email is sent when everything is covered."
+msgstr "Einmal pro Woche bekommen die Empfänger eine Übersicht aller Dienste, die ihre Mindestzahl an Personen noch nicht erreicht haben. Ist alles besetzt, wird keine E-Mail verschickt."
+
+#: admin/views/settings.php:116
+msgid "Recipients"
+msgstr "Empfänger"
+
+#: admin/views/settings.php:119
+msgid "One email address per line. Leave empty to disable the alert."
+msgstr "Eine E-Mail-Adresse pro Zeile. Leer lassen, um den Hinweis abzuschalten."
+
+#: admin/views/settings.php:123
+msgid "Send on"
+msgstr "Senden am"
+
+#: admin/views/settings.php:130
+msgid "at"
+msgstr "um"
+
+#: admin/views/settings.php:135
+msgid "Check"
+msgstr "Prüfen"
+
+#: admin/views/settings.php:138
+msgid "the following week (Mon–Sun)"
+msgstr "die folgende Woche (Mo–So)"
+
+#: admin/views/settings.php:139
+msgid "the rest of the current week"
+msgstr "den Rest der aktuellen Woche"
+
+#: admin/views/settings.php:145
+msgid "Sign-up allowlist"
+msgstr "Freigabeliste für Anmeldungen"
+
+#: admin/views/settings.php:148
+msgid "Allowed people"
+msgstr "Zugelassene Personen"
+
+#: admin/views/settings.php:151
+msgid "Optional. One email address or @domain per line. If filled, only matching addresses can sign up. Leave empty to allow everyone. Spots with their own allowlist use that instead."
+msgstr "Optional. Eine E-Mail-Adresse oder @domain pro Zeile. Wenn ausgefüllt, können sich nur passende Adressen anmelden. Leer lassen, um alle zuzulassen. Dienste mit eigener Freigabeliste verwenden stattdessen diese."
+
+#: admin/views/settings.php:156
+msgid "Email templates"
+msgstr "E-Mail-Vorlagen"
+
+#: admin/views/settings.php:158
+msgid "Available placeholders"
+msgstr "Verfügbare Platzhalter"
+
+#: admin/views/settings.php:170
+msgid "Subject"
+msgstr "Betreff"
+
+#: admin/views/settings.php:171
+msgid "Body"
+msgstr "Text"
+
+#: admin/views/settings.php:177
+msgid "Empty fields are reset to the default text."
+msgstr "Leere Felder werden auf den Standardtext zurückgesetzt."
+
+#: admin/views/settings.php:181
+msgid "Data"
+msgstr "Daten"
+
+#: admin/views/settings.php:184
+msgid "Uninstall"
+msgstr "Deinstallation"
+
+#: admin/views/settings.php:185
+msgid "Delete all spots, registrations and settings when the plugin is deleted"
+msgstr "Alle Dienste, Anmeldungen und Einstellungen löschen, wenn das Plugin gelöscht wird"
+
+#: admin/views/settings.php:189
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: admin/views/settings.php:196
+msgid "Next background check:"
+msgstr "Nächste Hintergrundprüfung:"
+
+#: admin/views/settings.php:197
+msgid "not scheduled"
+msgstr "nicht geplant"
+
+#: admin/views/settings.php:198
+msgid "(runs every 15 minutes via WP-Cron; on low-traffic sites set up a real cron job calling wp-cron.php)"
+msgstr "(läuft alle 15 Minuten über WP-Cron; richte auf Websites mit wenig Besuchern einen echten Cronjob ein, der wp-cron.php aufruft)"
+
+#: admin/views/settings.php:201
+msgid "Alert this week:"
+msgstr "Hinweis diese Woche:"
+
+#: admin/views/settings.php:204
+msgid "(already done)"
+msgstr "(bereits erledigt)"
+
+#: admin/views/settings.php:211
+msgid "Send admin alert now"
+msgstr "Admin-Hinweis jetzt senden"
+
+#. translators: %s: period
+#: admin/views/settings.php:216
+#, php-format
+msgid "Checks %s and emails the recipients if any duty is understaffed. Does not affect the weekly schedule."
+msgstr "Prüft den Zeitraum %s und benachrichtigt die Empfänger per E-Mail, falls ein Dienst unterbesetzt ist. Der wöchentliche Versand bleibt davon unberührt."
+
+#: admin/views/spot-edit.php:16
+msgid "Edit spot"
+msgstr "Dienst bearbeiten"
+
+#: admin/views/spot-edit.php:29
+msgid "Description"
+msgstr "Beschreibung"
+
+#: admin/views/spot-edit.php:33
+#: includes/class-mailer.php:51
+#: includes/class-shortcode.php:79
+msgid "Location"
+msgstr "Ort"
+
+#: admin/views/spot-edit.php:38
+msgid "Active (shown in the calendar, open for sign-up)"
+msgstr "Aktiv (im Kalender sichtbar, Anmeldung möglich)"
+
+#: admin/views/spot-edit.php:45
+msgid "Repeats"
+msgstr "Wiederholung"
+
+#: admin/views/spot-edit.php:48
+msgid "Daily"
+msgstr "Täglich"
+
+#: admin/views/spot-edit.php:49
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#: admin/views/spot-edit.php:54
+msgid "Every"
+msgstr "Alle"
+
+#: admin/views/spot-edit.php:57
+msgid "day(s)"
+msgstr "Tag(e)"
+
+#: admin/views/spot-edit.php:58
+msgid "week(s)"
+msgstr "Woche(n)"
+
+#: admin/views/spot-edit.php:59
+msgid "E.g. 2 = every other day/week."
+msgstr "Z. B. 2 = jeden zweiten Tag bzw. jede zweite Woche."
+
+#: admin/views/spot-edit.php:63
+msgid "On"
+msgstr "Am"
+
+#: admin/views/spot-edit.php:73
+msgid "Starts on"
+msgstr "Beginnt am"
+
+#: admin/views/spot-edit.php:77
+msgid "Ends on"
+msgstr "Endet am"
+
+#: admin/views/spot-edit.php:80
+msgid "Optional. Leave empty to repeat indefinitely."
+msgstr "Optional. Leer lassen, um unbegrenzt zu wiederholen."
+
+#: admin/views/spot-edit.php:85
+msgid "All day (no specific time)"
+msgstr "Ganztägig (keine feste Uhrzeit)"
+
+#: admin/views/spot-edit.php:88
+msgid "Start time"
+msgstr "Startzeit"
+
+#: admin/views/spot-edit.php:92
+msgid "Duration"
+msgstr "Dauer"
+
+#: admin/views/spot-edit.php:93
+msgid "minutes"
+msgstr "Minuten"
+
+#: admin/views/spot-edit.php:100
+msgid "Minimum"
+msgstr "Minimum"
+
+#: admin/views/spot-edit.php:103
+msgid "Below this, the duty is marked \"Needs people\" and included in the admin alert."
+msgstr "Darunter wird der Dienst als „Leute gesucht“ markiert und im Admin-Hinweis aufgeführt."
+
+#: admin/views/spot-edit.php:107
+msgid "Maximum"
+msgstr "Maximum"
+
+#: admin/views/spot-edit.php:110
+msgid "When reached, the duty is \"Fully booked\" and sign-up closes."
+msgstr "Ist es erreicht, ist der Dienst „Ausgebucht“ und die Anmeldung geschlossen."
+
+#: admin/views/spot-edit.php:114
+msgid "Allowlist"
+msgstr "Freigabeliste"
+
+#: admin/views/spot-edit.php:118
+msgid "Optional. One email address or @domain per line. If filled, only these may sign up for this spot (overrides the global allowlist). Leave empty to use the global setting."
+msgstr "Optional. Eine E-Mail-Adresse oder @domain pro Zeile. Wenn ausgefüllt, dürfen sich nur diese für den Dienst anmelden (ersetzt die globale Freigabeliste). Leer lassen, um die globale Einstellung zu verwenden."
+
+#: admin/views/spot-edit.php:124
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+#. translators: %s: time
+#: admin/views/spot-edit.php:135
+#, php-format
+msgid "0 = no reminder. For all-day spots, hours are counted back from %s on that day (see Settings)."
+msgstr "0 = keine Erinnerung. Bei ganztägigen Diensten werden die Stunden ab %s Uhr an diesem Tag zurückgerechnet (siehe Einstellungen)."
+
+#: admin/views/spot-edit.php:144
+msgid "Save spot"
+msgstr "Dienst speichern"
+
+#: admin/views/spot-edit.php:144
+msgid "Create spot"
+msgstr "Dienst anlegen"
+
+#. translators: %s: shortcode
+#: admin/views/spots.php:21
+#, php-format
+msgid "Spots are recurring duties. Show the public calendar on any page with the shortcode %s."
+msgstr "Dienste sind wiederkehrende Aufgaben. Zeige den öffentlichen Kalender auf einer beliebigen Seite mit dem Shortcode %s an."
+
+#: includes/class-cancel-handler.php:26
+msgid "Cancel registration"
+msgstr "Anmeldung stornieren"
+
+#: includes/class-cancel-handler.php:30
+msgid "Back to the calendar"
+msgstr "Zurück zum Kalender"
+
+#: includes/class-cancel-handler.php:36
+msgid "This registration was not found. It may already have been cancelled."
+msgstr "Diese Anmeldung wurde nicht gefunden. Vielleicht wurde sie schon storniert."
+
+#: includes/class-cancel-handler.php:51
+#: includes/class-registration-service.php:46
+msgid "This duty is already over."
+msgstr "Dieser Dienst ist bereits vorbei."
+
+#: includes/class-cancel-handler.php:58
+msgid "Registration cancelled"
+msgstr "Anmeldung storniert"
+
+#. translators: %s: display name
+#: includes/class-cancel-handler.php:61
+#, php-format
+msgid "Thanks for letting us know, %s. You have been removed from this duty."
+msgstr "Danke für Bescheid, %s. Du wurdest aus diesem Dienst ausgetragen."
+
+#: includes/class-cancel-handler.php:67
+msgid "Yes, cancel my registration"
+msgstr "Ja, meine Anmeldung stornieren"
+
+#. translators: %s: display name
+#: includes/class-cancel-handler.php:73
+#, php-format
+msgid "Hi %s, do you want to cancel your registration for this duty?"
+msgstr "Hallo %s, möchtest du deine Anmeldung für diesen Dienst stornieren?"
+
+#. translators: PHP date format for dates, see https://www.php.net/manual/datetime.format.php
+#: includes/class-i18n.php:104
+msgctxt "date format"
+msgid "F j, Y"
+msgstr "j. F Y"
+
+#. translators: PHP date format for dates with weekday, see https://www.php.net/manual/datetime.format.php
+#: includes/class-i18n.php:109
+msgctxt "long date format"
+msgid "l, F j, Y"
+msgstr "l, j. F Y"
+
+#. translators: PHP time format, see https://www.php.net/manual/datetime.format.php
+#: includes/class-i18n.php:114
+msgctxt "time format"
+msgid "g:i a"
+msgstr "H:i"
+
+#: includes/class-i18n.php:145
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: includes/class-i18n.php:146
+msgid "Monday"
+msgstr "Montag"
+
+#: includes/class-i18n.php:147
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: includes/class-i18n.php:148
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: includes/class-i18n.php:149
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: includes/class-i18n.php:150
+msgid "Friday"
+msgstr "Freitag"
+
+#: includes/class-i18n.php:151
+msgid "Saturday"
+msgstr "Samstag"
+
+#: includes/class-i18n.php:154
+msgctxt "weekday abbreviation"
+msgid "Sun"
+msgstr "So"
+
+#: includes/class-i18n.php:155
+msgctxt "weekday abbreviation"
+msgid "Mon"
+msgstr "Mo"
+
+#: includes/class-i18n.php:156
+msgctxt "weekday abbreviation"
+msgid "Tue"
+msgstr "Di"
+
+#: includes/class-i18n.php:157
+msgctxt "weekday abbreviation"
+msgid "Wed"
+msgstr "Mi"
+
+#: includes/class-i18n.php:158
+msgctxt "weekday abbreviation"
+msgid "Thu"
+msgstr "Do"
+
+#: includes/class-i18n.php:159
+msgctxt "weekday abbreviation"
+msgid "Fri"
+msgstr "Fr"
+
+#: includes/class-i18n.php:160
+msgctxt "weekday abbreviation"
+msgid "Sat"
+msgstr "Sa"
+
+#: includes/class-i18n.php:168
+msgid "January"
+msgstr "Januar"
+
+#: includes/class-i18n.php:169
+msgid "February"
+msgstr "Februar"
+
+#: includes/class-i18n.php:170
+msgid "March"
+msgstr "März"
+
+#: includes/class-i18n.php:171
+msgid "April"
+msgstr "April"
+
+#: includes/class-i18n.php:172
+msgid "May"
+msgstr "Mai"
+
+#: includes/class-i18n.php:173
+msgid "June"
+msgstr "Juni"
+
+#: includes/class-i18n.php:174
+msgid "July"
+msgstr "Juli"
+
+#: includes/class-i18n.php:175
+msgid "August"
+msgstr "August"
+
+#: includes/class-i18n.php:176
+msgid "September"
+msgstr "September"
+
+#: includes/class-i18n.php:177
+msgid "October"
+msgstr "Oktober"
+
+#: includes/class-i18n.php:178
+msgid "November"
+msgstr "November"
+
+#: includes/class-i18n.php:179
+msgid "December"
+msgstr "Dezember"
+
+#: includes/class-i18n.php:182
+msgctxt "month abbreviation"
+msgid "Jan"
+msgstr "Jan."
+
+#: includes/class-i18n.php:183
+msgctxt "month abbreviation"
+msgid "Feb"
+msgstr "Feb."
+
+#: includes/class-i18n.php:184
+msgctxt "month abbreviation"
+msgid "Mar"
+msgstr "März"
+
+#: includes/class-i18n.php:185
+msgctxt "month abbreviation"
+msgid "Apr"
+msgstr "Apr."
+
+#: includes/class-i18n.php:186
+msgctxt "month abbreviation"
+msgid "May"
+msgstr "Mai"
+
+#: includes/class-i18n.php:187
+msgctxt "month abbreviation"
+msgid "Jun"
+msgstr "Juni"
+
+#: includes/class-i18n.php:188
+msgctxt "month abbreviation"
+msgid "Jul"
+msgstr "Juli"
+
+#: includes/class-i18n.php:189
+msgctxt "month abbreviation"
+msgid "Aug"
+msgstr "Aug."
+
+#: includes/class-i18n.php:190
+msgctxt "month abbreviation"
+msgid "Sep"
+msgstr "Sep."
+
+#: includes/class-i18n.php:191
+msgctxt "month abbreviation"
+msgid "Oct"
+msgstr "Okt."
+
+#: includes/class-i18n.php:192
+msgctxt "month abbreviation"
+msgid "Nov"
+msgstr "Nov."
+
+#: includes/class-i18n.php:193
+msgctxt "month abbreviation"
+msgid "Dec"
+msgstr "Dez."
+
+#: includes/class-mailer.php:16
+msgid "You are signed up: {spot} on {date}"
+msgstr "Du bist eingetragen: {spot} am {date}"
+
+#: includes/class-mailer.php:17
+msgid ""
+"Hi {name},\n"
+"\n"
+"thank you for signing up for \"{spot}\".\n"
+"\n"
+"Date: {date}\n"
+"Time: {time}\n"
+"Location: {location}\n"
+"\n"
+"We will send you a reminder beforehand.\n"
+"Can't make it? Please cancel here so someone else can take over:\n"
+"{cancel_url}\n"
+"\n"
+"Calendar: {calendar_url}"
+msgstr "Hallo {name},\n\nvielen Dank, dass du dich für „{spot}“ eingetragen hast.\n\nDatum: {date}\nUhrzeit: {time}\nOrt: {location}\n\nWir schicken dir vorher eine Erinnerung.\nDu kannst doch nicht? Bitte trag dich hier aus, damit jemand anderes übernehmen kann:\n{cancel_url}\n\nKalender: {calendar_url}"
+
+#: includes/class-mailer.php:21
+msgid "Reminder: {spot} on {date}"
+msgstr "Erinnerung: {spot} am {date}"
+
+#: includes/class-mailer.php:22
+msgid ""
+"Hi {name},\n"
+"\n"
+"a friendly reminder that you are signed up for \"{spot}\".\n"
+"\n"
+"Date: {date}\n"
+"Time: {time}\n"
+"Location: {location}\n"
+"\n"
+"Can't make it after all? Please cancel here:\n"
+"{cancel_url}\n"
+"\n"
+"Calendar: {calendar_url}"
+msgstr "Hallo {name},\n\neine freundliche Erinnerung: Du bist für „{spot}“ eingetragen.\n\nDatum: {date}\nUhrzeit: {time}\nOrt: {location}\n\nDu kannst doch nicht? Bitte trag dich hier aus:\n{cancel_url}\n\nKalender: {calendar_url}"
+
+#: includes/class-mailer.php:26
+msgid "Cancelled: {spot} on {date}"
+msgstr "Abgemeldet: {spot} am {date}"
+
+#: includes/class-mailer.php:27
+msgid ""
+"Hi {name},\n"
+"\n"
+"your registration for \"{spot}\" on {date} ({time}) has been cancelled.\n"
+"\n"
+"Calendar: {calendar_url}"
+msgstr "Hallo {name},\n\ndeine Anmeldung für „{spot}“ am {date} ({time}) wurde storniert.\n\nKalender: {calendar_url}"
+
+#: includes/class-mailer.php:31
+msgid "Does not take place: {spot} on {date}"
+msgstr "Fällt aus: {spot} am {date}"
+
+#: includes/class-mailer.php:32
+msgid ""
+"Hi {name},\n"
+"\n"
+"\"{spot}\" on {date} ({time}) will not take place. Your registration has been removed – there is nothing you need to do.\n"
+"\n"
+"Calendar: {calendar_url}"
+msgstr "Hallo {name},\n\n„{spot}“ am {date} ({time}) fällt aus. Deine Anmeldung wurde entfernt – du musst nichts weiter tun.\n\nKalender: {calendar_url}"
+
+#: includes/class-mailer.php:36
+msgid "{count} duties still need people ({week})"
+msgstr "Unterbesetzte Dienste: {count} ({week})"
+
+#: includes/class-mailer.php:37
+msgid ""
+"Hello,\n"
+"\n"
+"the following duties for {week} have not reached their minimum number of people yet:\n"
+"\n"
+"{list}\n"
+"\n"
+"Manage the schedule: {admin_url}\n"
+"Calendar: {calendar_url}"
+msgstr "Hallo,\n\nfolgende Dienste im Zeitraum {week} haben ihre Mindestzahl an Personen noch nicht erreicht:\n\n{list}\n\nDienstplan verwalten: {admin_url}\nKalender: {calendar_url}"
+
+#: includes/class-mailer.php:47
+msgid "Display name of the registrant"
+msgstr "Anzeigename der angemeldeten Person"
+
+#: includes/class-mailer.php:48
+msgid "Title of the duty"
+msgstr "Titel des Dienstes"
+
+#: includes/class-mailer.php:49
+msgid "Date of the duty"
+msgstr "Datum des Dienstes"
+
+#: includes/class-mailer.php:50
+msgid "Time range, or \"All day\""
+msgstr "Uhrzeit von–bis oder „Ganztägig“"
+
+#: includes/class-mailer.php:52
+msgid "Personal cancellation link"
+msgstr "Persönlicher Abmeldelink"
+
+#: includes/class-mailer.php:53
+msgid "Link to the calendar page"
+msgstr "Link zur Kalenderseite"
+
+#: includes/class-mailer.php:54
+msgid "Site title"
+msgstr "Titel der Website"
+
+#: includes/class-mailer.php:55
+msgid "Admin alert only: the period checked"
+msgstr "Nur Admin-Hinweis: der geprüfte Zeitraum"
+
+#: includes/class-mailer.php:56
+msgid "Admin alert only: number of understaffed duties"
+msgstr "Nur Admin-Hinweis: Anzahl unterbesetzter Dienste"
+
+#: includes/class-mailer.php:57
+msgid "Admin alert only: list of understaffed duties"
+msgstr "Nur Admin-Hinweis: Liste der unterbesetzten Dienste"
+
+#: includes/class-mailer.php:58
+msgid "Admin alert only: link to the schedule screen"
+msgstr "Nur Admin-Hinweis: Link zum Dienstplan"
+
+#: includes/class-privacy.php:18
+#: includes/class-privacy.php:26
+msgid "Duty Planner registrations"
+msgstr "Dienstplaner-Anmeldungen"
+
+#: includes/class-privacy.php:38
+msgid "Duty registrations"
+msgstr "Dienst-Anmeldungen"
+
+#: includes/class-privacy.php:42
+#: includes/class-shortcode.php:77
+msgid "Date"
+msgstr "Datum"
+
+#: includes/class-privacy.php:43
+msgid "Display name"
+msgstr "Anzeigename"
+
+#: includes/class-privacy.php:45
+msgid "Registered at (UTC)"
+msgstr "Angemeldet am (UTC)"
+
+#: includes/class-registration-service.php:26
+msgid "Please enter your name."
+msgstr "Bitte gib deinen Namen ein."
+
+#: includes/class-registration-service.php:32
+msgid "Please enter a valid email address."
+msgstr "Bitte gib eine gültige E-Mail-Adresse ein."
+
+#: includes/class-registration-service.php:37
+msgid "This duty does not exist."
+msgstr "Diesen Dienst gibt es nicht."
+
+#: includes/class-registration-service.php:40
+msgid "This duty does not take place on that date."
+msgstr "Dieser Dienst findet an diesem Datum nicht statt."
+
+#: includes/class-registration-service.php:43
+msgid "This duty has been cancelled for that date."
+msgstr "Dieser Dienst wurde für dieses Datum abgesagt."
+
+#: includes/class-registration-service.php:49
+msgid "This email address is not permitted to sign up for this duty."
+msgstr "Mit dieser E-Mail-Adresse ist keine Anmeldung für diesen Dienst möglich."
+
+#: includes/class-registration-service.php:55
+msgid "The server is busy. Please try again."
+msgstr "Der Server ist ausgelastet. Bitte versuch es noch einmal."
+
+#: includes/class-registration-service.php:59
+msgid "This email address is already signed up for this duty."
+msgstr "Diese E-Mail-Adresse ist für diesen Dienst bereits eingetragen."
+
+#: includes/class-registration-service.php:62
+msgid "Sorry, this duty is already fully booked."
+msgstr "Leider ist dieser Dienst schon ausgebucht."
+
+#: includes/class-registration-service.php:70
+msgid "Your registration could not be saved. Please try again."
+msgstr "Deine Anmeldung konnte nicht gespeichert werden. Bitte versuch es noch einmal."
+
+#: includes/class-rest-controller.php:99
+msgid "Your session has expired. Please reload the page and try again."
+msgstr "Deine Sitzung ist abgelaufen. Bitte lade die Seite neu und versuch es noch einmal."
+
+#: includes/class-rest-controller.php:102
+msgid "Your registration could not be accepted."
+msgstr "Deine Anmeldung konnte nicht angenommen werden."
+
+#: includes/class-rest-controller.php:105
+msgid "Too many attempts. Please wait a few minutes and try again."
+msgstr "Zu viele Versuche. Bitte warte ein paar Minuten und versuch es dann noch einmal."
+
+#: includes/class-rest-controller.php:121
+msgid "You are signed up! A confirmation email is on its way."
+msgstr "Du bist eingetragen! Eine Bestätigung ist per E-Mail unterwegs."
+
+#. translators: 1: date, 2: time, 3: duty title, 4: people signed up, 5: minimum, 6: maximum
+#: includes/class-scheduler.php:140
+#, php-format
+msgid "- %1$s, %2$s: %3$s – %4$d signed up, at least %5$d needed (max. %6$d)"
+msgstr "- %1$s, %2$s: %3$s – %4$d eingetragen, mindestens %5$d benötigt (max. %6$d)"
+
+#: includes/class-shortcode.php:37
+#: includes/class-shortcode.php:102
+msgid "Loading…"
+msgstr "Wird geladen …"
+
+#: includes/class-shortcode.php:38
+msgid "Please enable JavaScript to see the duty calendar."
+msgstr "Bitte aktiviere JavaScript, um den Dienstkalender zu sehen."
+
+#: includes/class-shortcode.php:72
+msgid "Over"
+msgstr "Vorbei"
+
+#: includes/class-shortcode.php:73
+msgid "Previous"
+msgstr "Zurück"
+
+#: includes/class-shortcode.php:74
+msgid "Next"
+msgstr "Weiter"
+
+#: includes/class-shortcode.php:76
+msgid "Close"
+msgstr "Schließen"
+
+#: includes/class-shortcode.php:80
+msgid "Signed up"
+msgstr "Eingetragen"
+
+#: includes/class-shortcode.php:81
+msgid "Nobody has signed up yet."
+msgstr "Bisher hat sich niemand eingetragen."
+
+#. translators: 1: people signed up, 2: maximum
+#: includes/class-shortcode.php:83
+#, php-format
+msgid "%1$s of %2$s places taken"
+msgstr "%1$s von %2$s Plätzen belegt"
+
+#. translators: %s: number of people still needed
+#: includes/class-shortcode.php:85
+#, php-format
+msgid "%s more needed"
+msgstr "noch %s benötigt"
+
+#: includes/class-shortcode.php:86
+msgid "1 place left"
+msgstr "noch 1 Platz frei"
+
+#. translators: %s: number of free places
+#: includes/class-shortcode.php:88
+#, php-format
+msgid "%s places left"
+msgstr "noch %s Plätze frei"
+
+#. translators: %s: minimum number of people
+#: includes/class-shortcode.php:90
+#, php-format
+msgid "Minimum: %s"
+msgstr "Minimum: %s"
+
+#: includes/class-shortcode.php:91
+msgid "Sign up for this duty"
+msgstr "Für diesen Dienst eintragen"
+
+#: includes/class-shortcode.php:92
+msgid "Your name"
+msgstr "Dein Name"
+
+#: includes/class-shortcode.php:93
+msgid "Shown publicly in the calendar."
+msgstr "Wird öffentlich im Kalender angezeigt."
+
+#: includes/class-shortcode.php:94
+msgid "Your email"
+msgstr "Deine E-Mail-Adresse"
+
+#: includes/class-shortcode.php:95
+msgid "Only used for your confirmation and reminders – never shown."
+msgstr "Wird nur für deine Bestätigung und Erinnerungen genutzt – nie angezeigt."
+
+#: includes/class-shortcode.php:96
+msgid "Sign up"
+msgstr "Eintragen"
+
+#: includes/class-shortcode.php:97
+msgid "Sending…"
+msgstr "Wird gesendet …"
+
+#: includes/class-shortcode.php:98
+msgid "Sign-up is limited to approved email addresses."
+msgstr "Die Anmeldung ist auf freigegebene E-Mail-Adressen beschränkt."
+
+#: includes/class-shortcode.php:99
+msgid "This duty is fully booked. Thank you to everyone who signed up!"
+msgstr "Dieser Dienst ist ausgebucht. Danke an alle, die sich eingetragen haben!"
+
+#: includes/class-shortcode.php:100
+msgid "This duty is over."
+msgstr "Dieser Dienst ist vorbei."
+
+#: includes/class-shortcode.php:101
+msgid "This duty does not take place on this date."
+msgstr "Dieser Dienst findet an diesem Datum nicht statt."
+
+#: includes/class-shortcode.php:103
+msgid "The calendar could not be loaded. Please try again later."
+msgstr "Der Kalender konnte nicht geladen werden. Bitte versuch es später noch einmal."
+
+#: includes/class-shortcode.php:105
+msgid "Something went wrong. Please try again."
+msgstr "Da ist etwas schiefgelaufen. Bitte versuch es noch einmal."
+
+#: includes/class-shortcode.php:106
+msgid "Month"
+msgstr "Monat"
+
+#: includes/class-shortcode.php:107
+msgid "List"
+msgstr "Liste"
+

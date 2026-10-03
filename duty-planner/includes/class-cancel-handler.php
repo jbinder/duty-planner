@@ -44,7 +44,7 @@ class Cancel_Handler {
 			$details = sprintf(
 				'<p><strong>%s</strong><br>%s<br>%s</p>',
 				esc_html( $spot->title ),
-				esc_html( Time::format_date( $reg->occurrence_date, 'l, ' . get_option( 'date_format' ) ) ),
+				esc_html( Time::format_long_date( $reg->occurrence_date ) ),
 				esc_html( Time::format_time_range( $spot, $reg->occurrence_date ) )
 			);
 			if ( Time::end( $spot, $reg->occurrence_date ) <= Time::now() ) {

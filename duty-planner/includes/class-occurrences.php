@@ -52,7 +52,7 @@ class Occurrences {
 					'all_day'     => $spot->all_day,
 					'start'       => $start->format( DATE_ATOM ),
 					'end'         => $end->format( DATE_ATOM ),
-					'date_label'  => Time::format_date( $date, 'l, ' . get_option( 'date_format' ) ),
+					'date_label'  => Time::format_long_date( $date ),
 					'start_label' => Time::format_start( $spot, $date ),
 					'time_label'  => Time::format_time_range( $spot, $date ),
 					'min'         => $spot->min_people,

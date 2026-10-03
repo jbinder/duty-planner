@@ -10,6 +10,7 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
 - **Min/max people** per spot. The calendar marks each date *Needs people* (red, striped), *Places free* (amber) or *Fully booked* (green) with an icon, a count and a fill bar showing the minimum.
 - **Public calendar** via the shortcode `[duty_planner]` (options: `view="month|list"`, `weeks="6"`, `spots="1,2"`). It has a month grid that becomes an agenda on phones, a list view, and a sign-up dialog. Only display names are public. Emails are never sent to the browser.
 - **Unlisted calendar page** (optional): the page stays reachable by its link but is left out of automatic page menus, site search, the sitemap and the public REST page list, and is marked `noindex`.
+- **Languages:** English and German (informal "du"), switchable under *Settings → Language*. Choose a language explicitly or let it follow the WordPress language. The setting covers the calendar, all emails and the plugin's admin screens, including dates and weekday/month names. Email texts you haven't edited switch along; edited texts stay as written.
 - **Allowlist** (optional): addresses or `@domains`, set globally or per spot (a spot's own list overrides the global one).
 - **Emails** (editable templates with placeholders):
   - confirmation;
@@ -81,3 +82,17 @@ php tests/recurrence-test.php                                 # recurrence unit 
 ```
 
 All mail sent in the dev environment lands in Mailpit at http://localhost:8025.
+
+### Translations
+
+Translations live in `duty-planner/languages/`: `duty-planner.pot` (template) and `duty-planner-de_DE.po/.mo` (German). After changing or adding strings:
+
+```sh
+docker compose run --rm cli wp i18n make-pot wp-content/plugins/duty-planner \
+  wp-content/plugins/duty-planner/languages/duty-planner.pot --skip-js --exclude=languages
+docker compose run --rm cli wp i18n update-po wp-content/plugins/duty-planner/languages/duty-planner.pot
+# translate the new entries in duty-planner-de_DE.po (e.g. with Poedit), then:
+docker compose run --rm cli wp i18n make-mo wp-content/plugins/duty-planner/languages
+```
+
+To add a language, add a `duty-planner-<locale>.po/.mo` pair and register the locale in `I18n::languages()`.

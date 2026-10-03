@@ -60,7 +60,7 @@ class Shortcode {
 		$data = array(
 			'restUrl'     => esc_url_raw( rest_url( Rest_Controller::NS . '/' ) ),
 			'restNonce'   => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : '',
-			'locale'      => str_replace( '_', '-', determine_locale() ),
+			'locale'      => I18n::js_locale(),
 			'startOfWeek' => (int) get_option( 'start_of_week', 1 ),
 			'today'       => Time::today(),
 			'user'        => $user,

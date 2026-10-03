@@ -55,33 +55,42 @@ class Time {
 
 	public static function format_date( string $date, string $format = '' ): string {
 		$ts = ( new \DateTimeImmutable( $date . ' 12:00:00', self::tz() ) )->getTimestamp();
-		return wp_date( $format ?: get_option( 'date_format' ), $ts );
+		return I18n::date( $format ?: I18n::date_format(), $ts );
+	}
+
+	/** Date with weekday, e.g. "Tuesday, October 6, 2026". */
+	public static function format_long_date( string $date ): string {
+		return self::format_date( $date, I18n::long_date_format() );
+	}
+
+	/** Date and time of a timestamp, e.g. for "next run" displays. */
+	public static function format_datetime( int $timestamp, bool $weekday = false ): string {
+		$format = ( $weekday ? I18n::long_date_format() : I18n::date_format() ) . ' ' . I18n::time_format();
+		return I18n::date( $format, $timestamp );
 	}
 
 	public static function format_start( $spot, string $date ): string {
 		if ( $spot->all_day ) {
 			return __( 'All day', 'duty-planner' );
 		}
-		return wp_date( get_option( 'time_format' ), self::start( $spot, $date )->getTimestamp() );
+		return I18n::date( I18n::time_format(), self::start( $spot, $date )->getTimestamp() );
 	}
 
 	public static function format_time_range( $spot, string $date ): string {
 		if ( $spot->all_day ) {
 			return __( 'All day', 'duty-planner' );
 		}
-		$format = get_option( 'time_format' );
-		return wp_date( $format, self::start( $spot, $date )->getTimestamp() )
+		$format = I18n::time_format();
+		return I18n::date( $format, self::start( $spot, $date )->getTimestamp() )
 			. ' – '
-			. wp_date( $format, self::end( $spot, $date )->getTimestamp() );
+			. I18n::date( $format, self::end( $spot, $date )->getTimestamp() );
 	}
 
 	/** @return array<int,string> ISO weekday (1 = Monday) => localized name. */
 	public static function weekday_names( bool $short = false ): array {
-		global $wp_locale;
 		$names = array();
 		for ( $i = 1; $i <= 7; $i++ ) {
-			$name        = $wp_locale->get_weekday( $i % 7 );
-			$names[ $i ] = $short ? $wp_locale->get_weekday_abbrev( $name ) : $name;
+			$names[ $i ] = I18n::weekday( $i, $short );
 		}
 		return $names;
 	}
