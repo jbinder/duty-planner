@@ -9,18 +9,18 @@ defined( 'ABSPATH' ) || exit;
 class Mailer {
 
 	/** Template keys that are sent to registrants (as opposed to admins). */
-	const REGISTRANT_TEMPLATES = array( 'confirmation', 'reminder', 'cancellation', 'skip' );
+	const REGISTRANT_TEMPLATES = array( 'confirmation', 'reminder', 'cancellation', 'skip', 'overview' );
 
 	public static function default_templates(): array {
 		return array(
 			'tpl_confirmation_subject' => __( 'You are signed up: {spot} on {date}', 'duty-planner' ),
 			'tpl_confirmation_body'    => __(
-				"Hi {name},\n\nthank you for signing up for \"{spot}\".\n\nDate: {date}\nTime: {time}\nLocation: {location}\n\nWe will send you a reminder beforehand.\nCan't make it? Please cancel here so someone else can take over:\n{cancel_url}\n\nCalendar: {calendar_url}\n\n{stats}",
+				"Hi {name},\n\nthank you for signing up for \"{spot}\".\n\nDate: {date}\nTime: {time}\nLocation: {location}\n\nWe will send you a reminder beforehand.\nWant to change your details, or can't make it? Change or cancel your registration here, so someone else can take over:\n{manage_url}\n\nCalendar: {calendar_url}\n\n{stats}",
 				'duty-planner'
 			),
 			'tpl_reminder_subject'     => __( 'Reminder: {spot} on {date}', 'duty-planner' ),
 			'tpl_reminder_body'        => __(
-				"Hi {name},\n\na friendly reminder that you are signed up for \"{spot}\".\n\nDate: {date}\nTime: {time}\nLocation: {location}\n\nCan't make it after all? Please cancel here:\n{cancel_url}\n\nCalendar: {calendar_url}",
+				"Hi {name},\n\na friendly reminder that you are signed up for \"{spot}\".\n\nDate: {date}\nTime: {time}\nLocation: {location}\n\nCan't make it after all? Change or cancel your registration here:\n{manage_url}\n\nCalendar: {calendar_url}",
 				'duty-planner'
 			),
 			'tpl_cancellation_subject' => __( 'Cancelled: {spot} on {date}', 'duty-planner' ),
@@ -31,6 +31,11 @@ class Mailer {
 			'tpl_skip_subject'         => __( 'Does not take place: {spot} on {date}', 'duty-planner' ),
 			'tpl_skip_body'            => __(
 				"Hi {name},\n\n\"{spot}\" on {date} ({time}) will not take place. Your registration has been removed – there is nothing you need to do.\n\nCalendar: {calendar_url}",
+				'duty-planner'
+			),
+			'tpl_overview_subject'     => __( 'Your duties at {site}', 'duty-planner' ),
+			'tpl_overview_body'        => __(
+				"Hi {name},\n\nyou asked for an overview of your registrations. These are your upcoming duties:\n\n{list}\n\nUse the link below a duty to change or cancel that registration.\n\nCalendar: {calendar_url}\n\nIf you did not request this email, you can simply ignore it.",
 				'duty-planner'
 			),
 			'tpl_alert_subject'        => __( '{count} duties still need people ({week})', 'duty-planner' ),
@@ -51,12 +56,12 @@ class Mailer {
 			'{location}'     => __( 'Location', 'duty-planner' ),
 			'{stats}'        => __( 'How often the person has already done each duty, with a thank-you (or a welcome for first-timers)', 'duty-planner' ),
 			'{note}'         => __( 'Note the registrant left (if the duty has a note field)', 'duty-planner' ),
-			'{cancel_url}'   => __( 'Personal cancellation link', 'duty-planner' ),
+			'{manage_url}'   => __( 'Personal link to change or cancel the registration ({cancel_url} works too)', 'duty-planner' ),
 			'{calendar_url}' => __( 'Link to the calendar page', 'duty-planner' ),
 			'{site}'         => __( 'Site title', 'duty-planner' ),
 			'{week}'         => __( 'Admin alert only: the period checked', 'duty-planner' ),
 			'{count}'        => __( 'Admin alert only: number of understaffed duties', 'duty-planner' ),
-			'{list}'         => __( 'Admin alert only: list of understaffed duties', 'duty-planner' ),
+			'{list}'         => __( 'Admin alert: list of understaffed duties. Overview of registrations: list of upcoming duties with their links', 'duty-planner' ),
 			'{admin_url}'    => __( 'Admin alert only: link to the schedule screen', 'duty-planner' ),
 		);
 	}
@@ -91,7 +96,9 @@ class Mailer {
 			'time'       => Time::format_time_range( $spot, $reg->occurrence_date ),
 			'location'   => $spot->location ?: '–',
 			'note'       => '' !== (string) $reg->note ? $reg->note : '–',
-			'cancel_url' => Registration_Service::cancel_url( $reg ),
+			'manage_url' => Registration_Service::manage_url( $reg ),
+			// Old name of the placeholder, still used by templates edited before 1.5.
+			'cancel_url' => Registration_Service::manage_url( $reg ),
 		);
 	}
 
@@ -102,6 +109,43 @@ class Mailer {
 			$vars['stats'] = self::stats_box( $reg->email );
 		}
 		return self::send_template( $key, $reg->email, $vars );
+	}
+
+	/**
+	 * Mails a person a list of their upcoming registrations, each with its management link.
+	 * Sends nothing if there are none, so the caller can't tell which addresses are registered.
+	 */
+	public static function send_overview( string $email ): bool {
+		$now   = Time::now();
+		$lines = array();
+		$name  = '';
+		foreach ( Repository::registrations_by_email( $email ) as $reg ) {
+			$spot = Repository::get_spot( (int) $reg->spot_id );
+			if ( ! $spot || Time::end( $spot, $reg->occurrence_date ) <= $now ) {
+				continue;
+			}
+			$name    = $reg->display_name;
+			$time    = Time::format_time_range( $spot, $reg->occurrence_date );
+			$lines[] = '• ' . $spot->title . "\n  " . Time::format_long_date( $reg->occurrence_date ) . ( $spot->all_day ? '' : ', ' . $time )
+				. ( '' !== (string) $reg->note ? "\n  " . self::label( $spot->note_label ) . ' ' . $reg->note : '' )
+				. "\n  " . Registration_Service::manage_url( $reg );
+		}
+		if ( ! $lines ) {
+			return false;
+		}
+		return self::send_template(
+			'overview',
+			$email,
+			array(
+				'name' => $name,
+				'list' => implode( "\n\n", $lines ),
+			)
+		);
+	}
+
+	/** "Label:" – unless the label already ends in punctuation, like "What will you bring?". */
+	private static function label( string $label ): string {
+		return preg_match( '/[?:!.]$/u', $label ) ? $label : $label . ':';
 	}
 
 	/**

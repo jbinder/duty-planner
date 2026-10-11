@@ -111,6 +111,18 @@
 	cursor: progress;
 }
 
+/* ---------------------------------------------------------------- footer */
+
+.dp-footer {
+	margin: 14px 0 0;
+	font-size: 0.9em;
+}
+
+.dp-footer .dp-linkbtn {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
 /* ---------------------------------------------------------------- legend */
 
 .dp-legend {

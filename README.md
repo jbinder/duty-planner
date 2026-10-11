@@ -18,8 +18,10 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
   - confirmation, ending with a small thank-you box: how often the person has already done each duty (past dates, matched by email), or a welcome for first-timers (placeholder `{stats}`);
   - reminder (offset **per spot**; all-day spots count back from a configurable reference time);
   - cancellation;
-  - "date cancelled" notice.
-- **Self-cancellation** via a signed link in every email. The link opens a confirmation step, so mail scanners can't cancel anyone.
+  - "date cancelled" notice;
+  - overview of a person's registrations (`{list}`), requested from the calendar.
+- **Self-service changes** via a signed personal link in every confirmation and reminder email (placeholder `{manage_url}`; the old `{cancel_url}` still works). The link opens a page where people can change their name and note, cancel, or cancel and pick another date in the calendar. The email address can't be changed there: the link is tied to it, so a new address means cancelling and signing up again. Every change needs a button press, so mail scanners can't change or cancel anything.
+- **Lost the email?** Below the calendar, *Change or cancel your registration* asks for an email address and sends a list of that person's upcoming duties with their links. The answer on the page is the same whether or not the address is registered, so it doesn't reveal who signed up, and each address gets at most one such email every 10 minutes.
 - **Weekly admin alert**: recipients, weekday and time are configurable. It lists duties below their minimum in the next week (or the rest of the current one), and sends nothing if every duty is covered.
 - **Admin screens**:
   - Schedule: fill status, registrants with emails, add/remove people, cancel/restore single dates.

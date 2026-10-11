@@ -217,9 +217,16 @@
 			self.current = null;
 		} );
 
+		var footer = el( 'p', { class: 'dp-footer' }, [
+			el( 'button', { type: 'button', class: 'dp-linkbtn', text: t.manageLink, onclick: function () {
+				self.openManageDialog();
+			} } ),
+		] );
+
 		this.root.appendChild( header );
 		this.root.appendChild( legend );
 		this.root.appendChild( this.body );
+		this.root.appendChild( footer );
 		document.body.appendChild( this.dialog );
 	};
 
@@ -470,6 +477,10 @@
 			this.canRegister( item ) ? this.form( item ) : null,
 		] ) );
 
+		this.showDialog();
+	};
+
+	Planner.prototype.showDialog = function () {
 		if ( ! this.dialog.open ) {
 			if ( typeof this.dialog.showModal === 'function' ) {
 				this.dialog.showModal();
@@ -477,6 +488,63 @@
 				this.dialog.setAttribute( 'open', '' );
 			}
 		}
+	};
+
+	/** People have no account, so the links to their registrations are sent by email. */
+	Planner.prototype.openManageDialog = function () {
+		var self = this;
+		this.current = null;
+		this.dialog.textContent = '';
+		this.dialog.className = 'dp-dialog dp-dialog-manage';
+
+		var email = el( 'input', { type: 'email', id: 'dp-manage-email', name: 'email', required: true, autocomplete: 'email', value: this.contact.email } );
+		var honeypot = el( 'input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off' } );
+		var submit = el( 'button', { type: 'submit', class: 'dp-btn dp-btn-primary', text: t.manageSubmit } );
+		var msg = el( 'p', { class: 'dp-message', role: 'alert', hidden: true } );
+
+		var form = el( 'form', { class: 'dp-form' }, [
+			el( 'div', { class: 'dp-field' }, [
+				el( 'label', { for: 'dp-manage-email', text: t.email } ),
+				email,
+			] ),
+			el( 'div', { class: 'dp-hp', 'aria-hidden': 'true' }, [ el( 'label', { text: 'Website' } ), honeypot ] ),
+			msg,
+			el( 'div', { class: 'dp-actions' }, [ submit ] ),
+		] );
+
+		form.addEventListener( 'submit', function ( e ) {
+			e.preventDefault();
+			if ( ! form.reportValidity() ) {
+				return;
+			}
+			submit.disabled = true;
+			submit.textContent = t.sending;
+			msg.hidden = true;
+
+			api( 'my-registrations', null, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify( { email: email.value.trim(), website: honeypot.value, nonce: self.nonce } ),
+			} ).then( function ( data ) {
+				form.replaceWith( el( 'p', { class: 'dp-message dp-message-success', role: 'status', text: data.message } ) );
+			} ).catch( function ( err ) {
+				msg.textContent = err.message || t.genericError;
+				msg.className = 'dp-message dp-message-error';
+				msg.hidden = false;
+				submit.disabled = false;
+				submit.textContent = t.manageSubmit;
+			} );
+		} );
+
+		this.dialog.appendChild( el( 'div', { class: 'dp-dialog-inner' }, [
+			el( 'button', { type: 'button', class: 'dp-close', 'aria-label': t.close, text: '×', onclick: function () {
+				self.closeDialog();
+			} } ),
+			el( 'h3', { id: 'dp-dialog-title', class: 'dp-dialog-title', text: t.manageTitle } ),
+			el( 'p', { text: t.manageIntro } ),
+			form,
+		] ) );
+		this.showDialog();
 	};
 
 	Planner.prototype.closeDialog = function () {

@@ -15,7 +15,7 @@ class Plugin {
 		Scheduler::init();
 		Rest_Controller::init();
 		Shortcode::init();
-		Cancel_Handler::init();
+		Manage_Handler::init();
 		Privacy::init();
 		Unlisted::init();
 

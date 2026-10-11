@@ -177,6 +177,11 @@ class Repository {
 		return $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . self::table( 'registrations' ) . ' WHERE id = %d', $id ) );
 	}
 
+	public static function update_registration( int $id, string $name, string $note ): void {
+		global $wpdb;
+		$wpdb->update( self::table( 'registrations' ), array( 'display_name' => $name, 'note' => $note ), array( 'id' => $id ) );
+	}
+
 	public static function delete_registration( int $id ): bool {
 		global $wpdb;
 		return (bool) $wpdb->delete( self::table( 'registrations' ), array( 'id' => $id ) );

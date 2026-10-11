@@ -19,6 +19,7 @@ $templates  = array(
 	'reminder'     => __( 'Reminder', 'duty-planner' ),
 	'cancellation' => __( 'Cancellation', 'duty-planner' ),
 	'skip'         => __( 'Date cancelled by admin', 'duty-planner' ),
+	'overview'     => __( 'Overview of registrations (requested from the calendar)', 'duty-planner' ),
 	'alert'        => __( 'Admin alert: duties need people', 'duty-planner' ),
 );
 $next_run   = wp_next_scheduled( Scheduler::HOOK );

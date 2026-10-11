@@ -15,6 +15,9 @@ class Rest_Controller {
 	const MAX_RANGE_DAYS = 92;
 	const NONCE_ACTION   = 'dutyplan_register';
 
+	/** Minimum time between two overview emails to the same address. */
+	const OVERVIEW_INTERVAL = 10 * MINUTE_IN_SECONDS;
+
 	public static function init() {
 		add_action( 'rest_api_init', array( self::class, 'routes' ) );
 	}
@@ -56,6 +59,21 @@ class Rest_Controller {
 					'name'    => array( 'required' => true, 'type' => 'string' ),
 					'email'   => array( 'required' => true, 'type' => 'string' ),
 					'note'    => array( 'type' => 'string', 'default' => '' ),
+					'nonce'   => array( 'required' => true, 'type' => 'string' ),
+					'website' => array( 'type' => 'string', 'default' => '' ), // Honeypot.
+				),
+			)
+		);
+
+		register_rest_route(
+			self::NS,
+			'/my-registrations',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( self::class, 'send_overview' ),
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'email'   => array( 'required' => true, 'type' => 'string' ),
 					'nonce'   => array( 'required' => true, 'type' => 'string' ),
 					'website' => array( 'type' => 'string', 'default' => '' ), // Honeypot.
 				),
@@ -125,6 +143,37 @@ class Rest_Controller {
 			array(
 				'message'    => __( 'You are signed up! A confirmation email is on its way.', 'duty-planner' ),
 				'occurrence' => $item ? self::public_item( $item ) : null,
+			)
+		);
+	}
+
+	/**
+	 * Emails the links to someone's registrations. The answer is the same whether or not
+	 * the address has registrations, so nobody can find out who signed up.
+	 */
+	public static function send_overview( WP_REST_Request $request ) {
+		if ( ! wp_verify_nonce( $request['nonce'], self::NONCE_ACTION ) ) {
+			return new WP_Error( 'dutyplan_nonce', __( 'Your session has expired. Please reload the page and try again.', 'duty-planner' ), array( 'status' => 403 ) );
+		}
+		$email = strtolower( trim( sanitize_email( (string) $request['email'] ) ) );
+		if ( ! is_email( $email ) ) {
+			return new WP_Error( 'dutyplan_email', __( 'Please enter a valid email address.', 'duty-planner' ), array( 'status' => 400 ) );
+		}
+		if ( self::rate_limited() ) {
+			return new WP_Error( 'dutyplan_rate_limit', __( 'Too many attempts. Please wait a few minutes and try again.', 'duty-planner' ), array( 'status' => 429 ) );
+		}
+
+		// Bots (honeypot) and repeated requests get the normal answer, but no email.
+		$throttle = 'dutyplan_ov_' . md5( $email );
+		if ( '' === trim( (string) $request['website'] ) && ! get_transient( $throttle ) ) {
+			if ( Mailer::send_overview( $email ) ) {
+				set_transient( $throttle, 1, self::OVERVIEW_INTERVAL );
+			}
+		}
+
+		return rest_ensure_response(
+			array(
+				'message' => __( 'If there are upcoming registrations for this address, we have sent an email with links to change or cancel them. Please check your inbox (and spam folder).', 'duty-planner' ),
 			)
 		);
 	}

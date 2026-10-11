@@ -6,7 +6,7 @@ use WP_Error;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Registering for and cancelling occurrences.
+ * Registering for, changing and cancelling occurrences.
  */
 class Registration_Service {
 
@@ -81,6 +81,26 @@ class Registration_Service {
 		return $reg;
 	}
 
+	/**
+	 * Changes the editable fields of a registration. The email address is not one of them:
+	 * the management link is tied to it, and a new address would be unverified.
+	 *
+	 * @return object|WP_Error The updated registration row.
+	 */
+	public static function update( $reg, string $name, string $note ) {
+		$name = mb_substr( trim( sanitize_text_field( $name ) ), 0, self::MAX_NAME_LENGTH );
+		if ( '' === $name ) {
+			return new WP_Error( 'dutyplan_name', __( 'Please enter your name.', 'duty-planner' ), array( 'status' => 400 ) );
+		}
+		$spot = Repository::get_spot( (int) $reg->spot_id );
+		$note = ( ! $spot || '' === $spot->note_label ) ? (string) $reg->note : mb_substr( trim( sanitize_text_field( $note ) ), 0, self::MAX_NOTE_LENGTH );
+
+		Repository::update_registration( (int) $reg->id, $name, $note );
+		$updated = Repository::get_registration( (int) $reg->id );
+		do_action( 'dutyplan_updated', $updated, $spot, $reg );
+		return $updated;
+	}
+
 	public static function cancel( $reg, bool $notify = true ): void {
 		$spot = Repository::get_spot( (int) $reg->spot_id );
 		Repository::delete_registration( (int) $reg->id );
@@ -91,22 +111,23 @@ class Registration_Service {
 	}
 
 	/**
-	 * Cancellation keys are derived with an HMAC, so nothing secret has to be stored
-	 * and the link can be regenerated for every reminder.
+	 * Management keys are derived with an HMAC, so nothing secret has to be stored
+	 * and the link can be regenerated for every email.
 	 */
-	public static function cancel_key( $reg ): string {
+	public static function manage_key( $reg ): string {
 		return substr( hash_hmac( 'sha256', $reg->id . '|' . $reg->email . '|' . $reg->created_at, wp_salt( 'auth' ) ), 0, 32 );
 	}
 
 	public static function verify_key( $reg, string $key ): bool {
-		return hash_equals( self::cancel_key( $reg ), $key );
+		return hash_equals( self::manage_key( $reg ), $key );
 	}
 
-	public static function cancel_url( $reg ): string {
+	/** Personal link to change or cancel a registration. */
+	public static function manage_url( $reg ): string {
 		return add_query_arg(
 			array(
-				'dutyplan_cancel' => (int) $reg->id,
-				'key'             => self::cancel_key( $reg ),
+				Manage_Handler::PARAM => (int) $reg->id,
+				'key'                 => self::manage_key( $reg ),
 			),
 			home_url( '/' )
 		);

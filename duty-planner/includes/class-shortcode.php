@@ -107,6 +107,10 @@ class Shortcode {
 				'genericError' => __( 'Something went wrong. Please try again.', 'duty-planner' ),
 				'monthView'    => __( 'Month', 'duty-planner' ),
 				'listView'     => __( 'List', 'duty-planner' ),
+				'manageLink'   => __( 'Signed up already? Change or cancel your registration', 'duty-planner' ),
+				'manageTitle'  => __( 'Change or cancel a registration', 'duty-planner' ),
+				'manageIntro'  => __( 'Enter the email address you signed up with. We will send you a list of your upcoming duties, each with a link to change or cancel it. The links are also in your confirmation and reminder emails.', 'duty-planner' ),
+				'manageSubmit' => __( 'Send me my links', 'duty-planner' ),
 			),
 		);
 
