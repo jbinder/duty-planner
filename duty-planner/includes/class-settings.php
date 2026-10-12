@@ -23,6 +23,10 @@ class Settings {
 			'alert_weekday'          => 5,
 			'alert_time'             => '18:00',
 			'alert_target'           => 'next',
+			'list_recipients'        => '',
+			'list_weekday'           => 7,
+			'list_time'              => '18:00',
+			'list_target'            => 'next',
 			'allowlist'              => '',
 			'delete_data'            => 0,
 		) + Mailer::default_templates();
@@ -81,7 +85,17 @@ class Settings {
 
 	/** @return string[] */
 	public static function alert_recipients(): array {
-		return array_values( array_filter( preg_split( '/[\s,;]+/', (string) self::get( 'alert_recipients' ) ), 'is_email' ) );
+		return self::parse_emails( (string) self::get( 'alert_recipients' ) );
+	}
+
+	/** @return string[] Addresses of the mailing list for the weekly overview. */
+	public static function list_recipients(): array {
+		return self::parse_emails( (string) self::get( 'list_recipients' ) );
+	}
+
+	/** @return string[] */
+	private static function parse_emails( string $value ): array {
+		return array_values( array_filter( array_map( 'sanitize_email', preg_split( '/[\s,;]+/', $value ) ), 'is_email' ) );
 	}
 
 	public static function sanitize( $in ): array {
@@ -98,12 +112,14 @@ class Settings {
 		$out['default_reminder_hours'] = min( 720, absint( $in['default_reminder_hours'] ?? $def['default_reminder_hours'] ) );
 		$out['allday_reference_time']  = self::sanitize_time( $in['allday_reference_time'] ?? '', $def['allday_reference_time'] );
 
-		$recipients              = array_map( 'sanitize_email', preg_split( '/[\s,;]+/', (string) ( $in['alert_recipients'] ?? '' ) ) );
-		$out['alert_recipients'] = implode( "\n", array_filter( $recipients, 'is_email' ) );
-		$weekday                 = absint( $in['alert_weekday'] ?? 0 );
-		$out['alert_weekday']    = ( $weekday >= 1 && $weekday <= 7 ) ? $weekday : $def['alert_weekday'];
-		$out['alert_time']       = self::sanitize_time( $in['alert_time'] ?? '', $def['alert_time'] );
-		$out['alert_target']     = in_array( $in['alert_target'] ?? '', array( 'next', 'current' ), true ) ? $in['alert_target'] : 'next';
+		// Admin alert and mailing list mail share the same kind of schedule.
+		foreach ( array( 'alert', 'list' ) as $prefix ) {
+			$out[ "{$prefix}_recipients" ] = implode( "\n", self::parse_emails( (string) ( $in[ "{$prefix}_recipients" ] ?? '' ) ) );
+			$weekday                       = absint( $in[ "{$prefix}_weekday" ] ?? 0 );
+			$out[ "{$prefix}_weekday" ]    = ( $weekday >= 1 && $weekday <= 7 ) ? $weekday : $def[ "{$prefix}_weekday" ];
+			$out[ "{$prefix}_time" ]       = self::sanitize_time( $in[ "{$prefix}_time" ] ?? '', $def[ "{$prefix}_time" ] );
+			$out[ "{$prefix}_target" ]     = in_array( $in[ "{$prefix}_target" ] ?? '', array( 'next', 'current' ), true ) ? $in[ "{$prefix}_target" ] : 'next';
+		}
 
 		$out['allowlist']   = Allowlist::sanitize( (string) ( $in['allowlist'] ?? '' ) );
 		$out['delete_data'] = empty( $in['delete_data'] ) ? 0 : 1;

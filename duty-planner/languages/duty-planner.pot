@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Duty Planner 1.5.0\n"
+"Project-Id-Version: Duty Planner 1.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/duty-planner\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T12:30:34+00:00\n"
+"POT-Creation-Date: 2026-10-12T05:13:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: duty-planner\n"
@@ -51,180 +51,196 @@ msgstr ""
 msgid "Spot not found."
 msgstr ""
 
-#: admin/class-admin.php:156
+#: admin/class-admin.php:157
 msgid "Please enter a title."
 msgstr ""
 
-#: admin/class-admin.php:159
+#: admin/class-admin.php:160
 msgid "Please enter a valid start date."
 msgstr ""
 
-#: admin/class-admin.php:162
+#: admin/class-admin.php:163
 msgid "The end date must be a valid date after the start date."
 msgstr ""
 
-#: admin/class-admin.php:165
+#: admin/class-admin.php:166
 msgid "Please select at least one weekday."
 msgstr ""
 
-#: admin/class-admin.php:168
+#: admin/class-admin.php:169
 msgid "Please enter a start time and a duration, or mark the spot as all-day."
 msgstr ""
 
-#: admin/class-admin.php:171
+#: admin/class-admin.php:172
 msgid "The maximum number of people must be at least 1."
 msgstr ""
 
-#: admin/class-admin.php:174
+#: admin/class-admin.php:175
 msgid "The minimum cannot be larger than the maximum."
 msgstr ""
 
-#: admin/class-admin.php:187
+#: admin/class-admin.php:188
 msgid "Spot saved."
 msgstr ""
 
-#: admin/class-admin.php:196
+#: admin/class-admin.php:197
 msgid "Spot deleted."
 msgstr ""
 
 #. translators: %s: display name
-#: admin/class-admin.php:217
+#: admin/class-admin.php:218
 #, php-format
 msgid "%s has been added."
 msgstr ""
 
 #. translators: %s: display name
-#: admin/class-admin.php:226
+#: admin/class-admin.php:227
 #, php-format
 msgid "%s has been removed."
 msgstr ""
 
 #. translators: %d: number of people notified
-#: admin/class-admin.php:250
+#: admin/class-admin.php:251
 #, php-format
 msgid "Date cancelled. %d person was notified."
 msgid_plural "Date cancelled. %d people were notified."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-admin.php:260
+#: admin/class-admin.php:261
 msgid "Date restored."
 msgstr ""
 
-#: admin/class-admin.php:267
+#: admin/class-admin.php:268
 msgid "Please configure at least one alert recipient first."
 msgstr ""
 
 #. translators: 1: number of duties, 2: period
-#: admin/class-admin.php:274
+#: admin/class-admin.php:275
 #, php-format
 msgid "Alert sent, listing %1$d understaffed duties for %2$s."
 msgstr ""
 
 #. translators: %s: period
-#: admin/class-admin.php:277
+#: admin/class-admin.php:278
 #, php-format
 msgid "All duties for %s have reached their minimum – no alert needed."
 msgstr ""
 
+#: admin/class-admin.php:285
+msgid "Please enter the mailing list address first."
+msgstr ""
+
+#. translators: 1: period, 2: duties that need people, 3: covered duties
+#: admin/class-admin.php:292
+#, php-format
+msgid "Mailing list mail for %1$s sent: %2$d duties need people, %3$d are covered."
+msgstr ""
+
+#. translators: %s: period
+#: admin/class-admin.php:295
+#, php-format
+msgid "There are no duties in %s – nothing sent."
+msgstr ""
+
 #. translators: %d: interval in days
-#: admin/class-admin.php:297
+#: admin/class-admin.php:315
 msgid "Every day"
 msgstr ""
 
 #. translators: %d: interval in days
-#: admin/class-admin.php:297
+#: admin/class-admin.php:315
 #, php-format
 msgid "Every %d days"
 msgstr ""
 
 #. translators: 1: weekdays, 2: interval in weeks
-#: admin/class-admin.php:304
+#: admin/class-admin.php:322
 #, php-format
 msgid "Weekly on %1$s"
 msgstr ""
 
 #. translators: 1: weekdays, 2: interval in weeks
-#: admin/class-admin.php:304
+#: admin/class-admin.php:322
 #, php-format
 msgid "Every %2$d weeks on %1$s"
 msgstr ""
 
 #. translators: %s: date
-#: admin/class-admin.php:307
+#: admin/class-admin.php:325
 #, php-format
 msgid "from %s"
 msgstr ""
 
 #. translators: %s: date
-#: admin/class-admin.php:310
+#: admin/class-admin.php:328
 #, php-format
 msgid "until %s"
 msgstr ""
 
 #. translators: 1: shortcode, 2: settings link
-#: admin/class-admin.php:327
+#: admin/class-admin.php:345
 #, php-format
 msgid "Public calendar: <strong>no page selected.</strong> Create a page with %1$s and choose it in the <a href=\"%2$s\">settings</a>."
 msgstr ""
 
-#: admin/class-admin.php:337
+#: admin/class-admin.php:355
 msgid "Public calendar:"
 msgstr ""
 
-#: admin/class-admin.php:342
+#: admin/class-admin.php:360
 msgid "Copied!"
 msgstr ""
 
-#: admin/class-admin.php:343
+#: admin/class-admin.php:361
 msgid "Copy link"
 msgstr ""
 
-#: admin/class-admin.php:348
+#: admin/class-admin.php:366
 msgid "The page is not published yet, so visitors cannot open it."
 msgstr ""
 
-#: admin/class-admin.php:350
+#: admin/class-admin.php:368
 msgid "The page is password protected."
 msgstr ""
 
-#: admin/class-admin.php:353
+#: admin/class-admin.php:371
 msgid "The [duty_planner] shortcode was not found on this page. Add it there, e.g. with a Shortcode block, or in Elementor with the Shortcode widget."
 msgstr ""
 
-#: admin/class-admin.php:356
+#: admin/class-admin.php:374
 msgid "Unlisted – only reachable via this link"
 msgstr ""
 
-#: admin/class-admin.php:375
+#: admin/class-admin.php:393
 msgid "Duty Planner calendar (unlisted)"
 msgstr ""
 
-#: admin/class-admin.php:376
+#: admin/class-admin.php:394
 msgid "Duty Planner calendar"
 msgstr ""
 
-#: admin/class-admin.php:383
+#: admin/class-admin.php:401
 #: includes/class-shortcode.php:71
 msgid "Cancelled"
 msgstr ""
 
-#: admin/class-admin.php:386
+#: admin/class-admin.php:404
 #: includes/class-shortcode.php:68
 msgid "Needs people"
 msgstr ""
 
-#: admin/class-admin.php:387
+#: admin/class-admin.php:405
 #: includes/class-shortcode.php:69
 msgid "Places free"
 msgstr ""
 
-#: admin/class-admin.php:388
+#: admin/class-admin.php:406
 #: includes/class-shortcode.php:70
 msgid "Fully booked"
 msgstr ""
 
-#: admin/class-admin.php:412
+#: admin/class-admin.php:430
 msgid "You are not allowed to do this."
 msgstr ""
 
@@ -238,7 +254,8 @@ msgid "Recurrence"
 msgstr ""
 
 #: admin/class-spots-list-table.php:29
-#: admin/views/settings.php:132
+#: admin/views/settings.php:135
+#: admin/views/settings.php:168
 #: admin/views/spot-edit.php:102
 #: includes/class-shortcode.php:78
 msgid "Time"
@@ -249,7 +266,7 @@ msgid "People (min–max)"
 msgstr ""
 
 #: admin/class-spots-list-table.php:31
-#: admin/views/settings.php:19
+#: admin/views/settings.php:20
 #: admin/views/spot-edit.php:154
 msgid "Reminder"
 msgstr ""
@@ -398,7 +415,7 @@ msgid "Duty"
 msgstr ""
 
 #: admin/views/schedule.php:67
-#: admin/views/settings.php:194
+#: admin/views/settings.php:230
 #: admin/views/spot-edit.php:55
 msgid "Status"
 msgstr ""
@@ -463,225 +480,272 @@ msgstr ""
 msgid "Cancel date"
 msgstr ""
 
-#: admin/views/settings.php:18
+#: admin/views/settings.php:19
 msgid "Confirmation (after sign-up)"
 msgstr ""
 
-#: admin/views/settings.php:20
+#: admin/views/settings.php:21
 msgid "Cancellation"
 msgstr ""
 
-#: admin/views/settings.php:21
+#: admin/views/settings.php:22
 msgid "Date cancelled by admin"
 msgstr ""
 
-#: admin/views/settings.php:22
+#: admin/views/settings.php:23
 msgid "Overview of registrations (requested from the calendar)"
 msgstr ""
 
-#: admin/views/settings.php:23
+#: admin/views/settings.php:24
 msgid "Admin alert: duties need people"
 msgstr ""
 
-#: admin/views/settings.php:29
+#: admin/views/settings.php:25
+msgid "Mailing list: weekly duty overview"
+msgstr ""
+
+#: admin/views/settings.php:32
 msgid "Duty Planner settings"
 msgstr ""
 
-#: admin/views/settings.php:34
+#: admin/views/settings.php:37
 msgid "General"
 msgstr ""
 
-#: admin/views/settings.php:37
+#: admin/views/settings.php:40
 msgid "Language"
 msgstr ""
 
 #. translators: %s: language name, e.g. "English"
-#: admin/views/settings.php:43
+#: admin/views/settings.php:46
 #, php-format
 msgid "Same as WordPress (currently %s)"
 msgstr ""
 
-#: admin/views/settings.php:50
+#: admin/views/settings.php:53
 msgid "Language of the public calendar, the emails and these admin screens. Email texts you have not changed switch along; texts you edited stay as they are."
 msgstr ""
 
-#: admin/views/settings.php:54
+#: admin/views/settings.php:57
 msgid "Calendar page"
 msgstr ""
 
-#: admin/views/settings.php:62
+#: admin/views/settings.php:65
 msgid "— Home page —"
 msgstr ""
 
-#: admin/views/settings.php:67
+#: admin/views/settings.php:70
 msgid "Choosing a page does not add anything to it. First put the [duty_planner] shortcode on the page (block editor: Shortcode block; Elementor: Shortcode widget), then select it here. The plugin uses it for the links in emails, the unlisted option and the link shown in the admin."
 msgstr ""
 
-#: admin/views/settings.php:72
+#: admin/views/settings.php:75
 msgid "Visibility"
 msgstr ""
 
-#: admin/views/settings.php:74
+#: admin/views/settings.php:77
 msgid "Keep the calendar page unlisted"
 msgstr ""
 
-#: admin/views/settings.php:75
+#: admin/views/settings.php:78
 msgid "Hides the page from automatic page menus, site search, the sitemap and search engines (noindex). It stays reachable for everyone who has the link – this is not access control; use the allowlist to restrict sign-ups. Menus you built by hand are not changed."
 msgstr ""
 
-#: admin/views/settings.php:77
+#: admin/views/settings.php:80
 msgid "Select the calendar page above, otherwise there is nothing to hide."
 msgstr ""
 
-#: admin/views/settings.php:82
+#: admin/views/settings.php:85
 msgid "Sender name"
 msgstr ""
 
-#: admin/views/settings.php:86
+#: admin/views/settings.php:89
 msgid "Sender email"
 msgstr ""
 
-#: admin/views/settings.php:89
+#: admin/views/settings.php:92
 msgid "Optional. Leave empty to use the WordPress default."
 msgstr ""
 
-#: admin/views/settings.php:94
+#: admin/views/settings.php:97
 msgid "Reminders"
 msgstr ""
 
-#: admin/views/settings.php:97
+#: admin/views/settings.php:100
 msgid "Default reminder for new spots"
 msgstr ""
 
-#: admin/views/settings.php:100
+#: admin/views/settings.php:103
 #: admin/views/spot-edit.php:157
 msgid "hours before the start"
 msgstr ""
 
-#: admin/views/settings.php:101
+#: admin/views/settings.php:104
 msgid "Each spot has its own reminder setting; this is only the preset for new spots."
 msgstr ""
 
-#: admin/views/settings.php:105
+#: admin/views/settings.php:108
 msgid "All-day reference time"
 msgstr ""
 
-#: admin/views/settings.php:108
+#: admin/views/settings.php:111
 msgid "Reminders for all-day spots are counted back from this time on the day of the duty."
 msgstr ""
 
-#: admin/views/settings.php:113
+#: admin/views/settings.php:116
 msgid "Admin alert"
 msgstr ""
 
-#: admin/views/settings.php:114
+#: admin/views/settings.php:117
 msgid "Once a week, the recipients get a summary of all duties that have not reached their minimum number of people. No email is sent when everything is covered."
 msgstr ""
 
-#: admin/views/settings.php:117
+#: admin/views/settings.php:120
 msgid "Recipients"
 msgstr ""
 
-#: admin/views/settings.php:120
+#: admin/views/settings.php:123
 msgid "One email address per line. Leave empty to disable the alert."
 msgstr ""
 
-#: admin/views/settings.php:124
+#: admin/views/settings.php:127
+#: admin/views/settings.php:160
 msgid "Send on"
 msgstr ""
 
-#: admin/views/settings.php:131
+#: admin/views/settings.php:134
+#: admin/views/settings.php:167
 msgid "at"
 msgstr ""
 
-#: admin/views/settings.php:136
+#: admin/views/settings.php:139
 msgid "Check"
 msgstr ""
 
-#: admin/views/settings.php:139
+#: admin/views/settings.php:142
+#: admin/views/settings.php:175
 msgid "the following week (Mon–Sun)"
 msgstr ""
 
-#: admin/views/settings.php:140
+#: admin/views/settings.php:143
+#: admin/views/settings.php:176
 msgid "the rest of the current week"
 msgstr ""
 
-#: admin/views/settings.php:146
-msgid "Sign-up allowlist"
-msgstr ""
-
 #: admin/views/settings.php:149
-msgid "Allowed people"
+msgid "Weekly mail to the mailing list"
 msgstr ""
 
-#: admin/views/settings.php:152
-msgid "Optional. One email address or @domain per line. If filled, only matching addresses can sign up. Leave empty to allow everyone. Spots with their own allowlist use that instead."
+#: admin/views/settings.php:150
+msgid "Once a week, everyone on the mailing list gets an overview of the duties: those that still need people, with a request to jump in, and those already covered, with a thank-you to the people who signed up. Their display names are included."
 msgstr ""
 
-#: admin/views/settings.php:157
-msgid "Email templates"
+#: admin/views/settings.php:153
+msgid "Mailing list"
 msgstr ""
 
-#: admin/views/settings.php:159
-msgid "Available placeholders"
-msgstr ""
-
-#: admin/views/settings.php:171
-msgid "Subject"
+#: admin/views/settings.php:156
+msgid "The address of the mailing list (or several, one per line). Leave empty to turn this mail off."
 msgstr ""
 
 #: admin/views/settings.php:172
-msgid "Body"
-msgstr ""
-
-#: admin/views/settings.php:178
-msgid "Empty fields are reset to the default text."
+msgid "Covers"
 msgstr ""
 
 #: admin/views/settings.php:182
-msgid "Data"
+msgid "Sign-up allowlist"
 msgstr ""
 
 #: admin/views/settings.php:185
+msgid "Allowed people"
+msgstr ""
+
+#: admin/views/settings.php:188
+msgid "Optional. One email address or @domain per line. If filled, only matching addresses can sign up. Leave empty to allow everyone. Spots with their own allowlist use that instead."
+msgstr ""
+
+#: admin/views/settings.php:193
+msgid "Email templates"
+msgstr ""
+
+#: admin/views/settings.php:195
+msgid "Available placeholders"
+msgstr ""
+
+#: admin/views/settings.php:207
+msgid "Subject"
+msgstr ""
+
+#: admin/views/settings.php:208
+msgid "Body"
+msgstr ""
+
+#: admin/views/settings.php:214
+msgid "Empty fields are reset to the default text."
+msgstr ""
+
+#: admin/views/settings.php:218
+msgid "Data"
+msgstr ""
+
+#: admin/views/settings.php:221
 msgid "Uninstall"
 msgstr ""
 
-#: admin/views/settings.php:186
+#: admin/views/settings.php:222
 msgid "Delete all spots, registrations and settings when the plugin is deleted"
 msgstr ""
 
-#: admin/views/settings.php:190
+#: admin/views/settings.php:226
 msgid "Save Changes"
 msgstr ""
 
-#: admin/views/settings.php:197
+#: admin/views/settings.php:233
 msgid "Next background check:"
 msgstr ""
 
-#: admin/views/settings.php:198
+#: admin/views/settings.php:234
 msgid "not scheduled"
 msgstr ""
 
-#: admin/views/settings.php:199
+#: admin/views/settings.php:235
 msgid "(runs every 15 minutes via WP-Cron; on low-traffic sites set up a real cron job calling wp-cron.php)"
 msgstr ""
 
-#: admin/views/settings.php:202
+#: admin/views/settings.php:238
 msgid "Alert this week:"
 msgstr ""
 
-#: admin/views/settings.php:205
+#: admin/views/settings.php:241
+#: admin/views/settings.php:249
 msgid "(already done)"
 msgstr ""
 
-#: admin/views/settings.php:212
+#: admin/views/settings.php:245
+msgid "Mailing list mail this week:"
+msgstr ""
+
+#: admin/views/settings.php:252
+msgid "off (no mailing list address)"
+msgstr ""
+
+#: admin/views/settings.php:259
 msgid "Send admin alert now"
 msgstr ""
 
 #. translators: %s: period
-#: admin/views/settings.php:217
+#: admin/views/settings.php:264
 #, php-format
 msgid "Checks %s and emails the recipients if any duty is understaffed. Does not affect the weekly schedule."
+msgstr ""
+
+#: admin/views/settings.php:274
+msgid "Send mailing list mail now"
+msgstr ""
+
+#. translators: %s: period
+#: admin/views/settings.php:279
+#, php-format
+msgid "Sends the overview for %s to the mailing list. Does not affect the weekly schedule."
 msgstr ""
 
 #: admin/views/spot-edit.php:16
@@ -697,7 +761,7 @@ msgid "Shown in the sign-up dialog. You can use bold, italic, lists and links."
 msgstr ""
 
 #: admin/views/spot-edit.php:51
-#: includes/class-mailer.php:56
+#: includes/class-mailer.php:61
 #: includes/class-shortcode.php:79
 msgid "Location"
 msgstr ""
@@ -1119,79 +1183,110 @@ msgid ""
 "Calendar: {calendar_url}"
 msgstr ""
 
-#: includes/class-mailer.php:52
-msgid "Display name of the registrant"
+#: includes/class-mailer.php:46
+msgid "Duties {week}: {status}"
 msgstr ""
 
-#: includes/class-mailer.php:53
-msgid "Title of the duty"
-msgstr ""
-
-#: includes/class-mailer.php:54
-msgid "Date of the duty"
-msgstr ""
-
-#: includes/class-mailer.php:55
-msgid "Time range, or \"All day\""
+#: includes/class-mailer.php:47
+msgid ""
+"Hello everyone,\n"
+"\n"
+"here is the duty plan for {week}.\n"
+"\n"
+"{open}\n"
+"\n"
+"{covered}\n"
+"\n"
+"Sign up or check the calendar: {calendar_url}\n"
+"\n"
+"Thank you for keeping our building running!"
 msgstr ""
 
 #: includes/class-mailer.php:57
-msgid "How often the person has already done each duty, with a thank-you (or a welcome for first-timers)"
+msgid "Display name of the registrant"
 msgstr ""
 
 #: includes/class-mailer.php:58
-msgid "Note the registrant left (if the duty has a note field)"
+msgid "Title of the duty"
 msgstr ""
 
 #: includes/class-mailer.php:59
-msgid "Personal link to change or cancel the registration ({cancel_url} works too)"
+msgid "Date of the duty"
 msgstr ""
 
 #: includes/class-mailer.php:60
-msgid "Link to the calendar page"
-msgstr ""
-
-#: includes/class-mailer.php:61
-msgid "Site title"
+msgid "Time range, or \"All day\""
 msgstr ""
 
 #: includes/class-mailer.php:62
-msgid "Admin alert only: the period checked"
+msgid "How often the person has already done each duty, with a thank-you (or a welcome for first-timers)"
 msgstr ""
 
 #: includes/class-mailer.php:63
-msgid "Admin alert only: number of understaffed duties"
+msgid "Note the registrant left (if the duty has a note field)"
 msgstr ""
 
 #: includes/class-mailer.php:64
-msgid "Admin alert: list of understaffed duties. Overview of registrations: list of upcoming duties with their links"
+msgid "Personal link to change or cancel the registration ({cancel_url} works too)"
 msgstr ""
 
 #: includes/class-mailer.php:65
+msgid "Link to the calendar page"
+msgstr ""
+
+#: includes/class-mailer.php:66
+msgid "Site title"
+msgstr ""
+
+#: includes/class-mailer.php:67
+msgid "Admin alert and mailing list: the period covered"
+msgstr ""
+
+#: includes/class-mailer.php:68
+msgid "Admin alert only: number of understaffed duties"
+msgstr ""
+
+#: includes/class-mailer.php:69
+msgid "Admin alert: list of understaffed duties. Overview of registrations: list of upcoming duties with their links"
+msgstr ""
+
+#: includes/class-mailer.php:70
 msgid "Admin alert only: link to the schedule screen"
 msgstr ""
 
-#: includes/class-mailer.php:173
+#: includes/class-mailer.php:71
+msgid "Mailing list only: duties that still need people, with a call to jump in (or a note that everything is covered)"
+msgstr ""
+
+#: includes/class-mailer.php:72
+msgid "Mailing list only: covered duties with the names (and notes) of the people, and a thank-you"
+msgstr ""
+
+#: includes/class-mailer.php:73
+msgid "Mailing list only: how many duties still need people, for the subject"
+msgstr ""
+
+#: includes/class-mailer.php:187
 msgid "This is your first duty with us – welcome, and thank you for joining in!"
 msgstr ""
 
-#: includes/class-mailer.php:175
+#: includes/class-mailer.php:189
 msgid "Your duties so far"
 msgstr ""
 
 #. translators: 1: duty title, 2: how often
-#: includes/class-mailer.php:178
+#: includes/class-mailer.php:192
 #, php-format
 msgid "• %1$s: %2$d×"
 msgstr ""
 
 #. translators: %d: total number of duties done
-#: includes/class-mailer.php:182
+#: includes/class-mailer.php:196
 #, php-format
 msgid "Total: %d×"
 msgstr ""
 
-#: includes/class-mailer.php:185
+#: includes/class-mailer.php:199
 msgid "Thank you for your help – it really makes a difference!"
 msgstr ""
 
@@ -1357,9 +1452,61 @@ msgid "If there are upcoming registrations for this address, we have sent an ema
 msgstr ""
 
 #. translators: 1: date, 2: time, 3: duty title, 4: people signed up, 5: minimum, 6: maximum
-#: includes/class-scheduler.php:140
+#: includes/class-scheduler.php:153
 #, php-format
 msgid "- %1$s, %2$s: %3$s – %4$d signed up, at least %5$d needed (max. %6$d)"
+msgstr ""
+
+#. translators: 1: comma-separated names, 2: last name
+#: includes/class-scheduler.php:180
+#, php-format
+msgid "%1$s and %2$s"
+msgstr ""
+
+#. translators: 1: people signed up, 2: minimum needed, 3: their names (with notes)
+#: includes/class-scheduler.php:227
+#, php-format
+msgid "%1$d of %2$d person so far: %3$s"
+msgid_plural "%1$d of %2$d people so far: %3$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: minimum needed
+#: includes/class-scheduler.php:229
+#, php-format
+msgid "%d person needed, nobody yet"
+msgid_plural "%d people needed, nobody yet"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: names of the people signed up (with notes)
+#: includes/class-scheduler.php:232
+#, php-format
+msgid "thank you, %s!"
+msgstr ""
+
+#: includes/class-scheduler.php:237
+msgid "These duties still need people – please jump in!"
+msgstr ""
+
+#: includes/class-scheduler.php:238
+msgid "Every duty is covered – nothing left to do."
+msgstr ""
+
+#: includes/class-scheduler.php:240
+msgid "Already covered – a big thank you to everyone who signed up:"
+msgstr ""
+
+#. translators: %d: number of duties that still need people
+#: includes/class-scheduler.php:244
+#, php-format
+msgid "%d duty still needs you"
+msgid_plural "%d duties still need you"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-scheduler.php:245
+msgid "everything covered – thank you!"
 msgstr ""
 
 #: includes/class-shortcode.php:37

@@ -43,6 +43,11 @@ class Mailer {
 				"Hello,\n\nthe following duties for {week} have not reached their minimum number of people yet:\n\n{list}\n\nManage the schedule: {admin_url}\nCalendar: {calendar_url}",
 				'duty-planner'
 			),
+			'tpl_list_subject'         => __( 'Duties {week}: {status}', 'duty-planner' ),
+			'tpl_list_body'            => __(
+				"Hello everyone,\n\nhere is the duty plan for {week}.\n\n{open}\n\n{covered}\n\nSign up or check the calendar: {calendar_url}\n\nThank you for keeping our building running!",
+				'duty-planner'
+			),
 		);
 	}
 
@@ -59,10 +64,13 @@ class Mailer {
 			'{manage_url}'   => __( 'Personal link to change or cancel the registration ({cancel_url} works too)', 'duty-planner' ),
 			'{calendar_url}' => __( 'Link to the calendar page', 'duty-planner' ),
 			'{site}'         => __( 'Site title', 'duty-planner' ),
-			'{week}'         => __( 'Admin alert only: the period checked', 'duty-planner' ),
+			'{week}'         => __( 'Admin alert and mailing list: the period covered', 'duty-planner' ),
 			'{count}'        => __( 'Admin alert only: number of understaffed duties', 'duty-planner' ),
 			'{list}'         => __( 'Admin alert: list of understaffed duties. Overview of registrations: list of upcoming duties with their links', 'duty-planner' ),
 			'{admin_url}'    => __( 'Admin alert only: link to the schedule screen', 'duty-planner' ),
+			'{open}'         => __( 'Mailing list only: duties that still need people, with a call to jump in (or a note that everything is covered)', 'duty-planner' ),
+			'{covered}'      => __( 'Mailing list only: covered duties with the names (and notes) of the people, and a thank-you', 'duty-planner' ),
+			'{status}'       => __( 'Mailing list only: how many duties still need people, for the subject', 'duty-planner' ),
 		);
 	}
 
@@ -84,7 +92,8 @@ class Mailer {
 			'calendar_url' => Settings::calendar_url(),
 		);
 		$subject = self::render( $settings[ "tpl_{$key}_subject" ], $vars );
-		$body    = self::render( $settings[ "tpl_{$key}_body" ], $vars );
+		// Empty placeholders (like {covered}) shouldn't leave a gap of blank lines behind.
+		$body    = preg_replace( "/\n{3,}/", "\n\n", self::render( str_replace( "\r\n", "\n", $settings[ "tpl_{$key}_body" ] ), $vars ) );
 		return self::send( $to, $subject, $body );
 	}
 

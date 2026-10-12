@@ -19,3 +19,4 @@ foreach ( array( 'registrations', 'skips', 'spots' ) as $dutyplan_table ) {
 delete_option( 'dutyplan_settings' );
 delete_option( 'dutyplan_db_version' );
 delete_option( 'dutyplan_last_alert_week' );
+delete_option( 'dutyplan_last_list_week' );

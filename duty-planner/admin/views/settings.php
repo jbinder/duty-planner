@@ -4,6 +4,7 @@
  *
  * @var array $settings
  * @var array $window
+ * @var array $list_window
  */
 
 namespace DutyPlanner;
@@ -21,9 +22,11 @@ $templates  = array(
 	'skip'         => __( 'Date cancelled by admin', 'duty-planner' ),
 	'overview'     => __( 'Overview of registrations (requested from the calendar)', 'duty-planner' ),
 	'alert'        => __( 'Admin alert: duties need people', 'duty-planner' ),
+	'list'         => __( 'Mailing list: weekly duty overview', 'duty-planner' ),
 );
 $next_run   = wp_next_scheduled( Scheduler::HOOK );
 $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
+$last_list  = get_option( Scheduler::LAST_LIST_OPT );
 ?>
 <div class="wrap dutyplan-admin">
 	<h1><?php esc_html_e( 'Duty Planner settings', 'duty-planner' ); ?></h1>
@@ -143,6 +146,39 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 			</tr>
 		</table>
 
+		<h2 class="title"><?php esc_html_e( 'Weekly mail to the mailing list', 'duty-planner' ); ?></h2>
+		<p><?php esc_html_e( 'Once a week, everyone on the mailing list gets an overview of the duties: those that still need people, with a request to jump in, and those already covered, with a thank-you to the people who signed up. Their display names are included.', 'duty-planner' ); ?></p>
+		<table class="form-table" role="presentation">
+			<tr>
+				<th scope="row"><label for="dp-list-recipients"><?php esc_html_e( 'Mailing list', 'duty-planner' ); ?></label></th>
+				<td>
+					<textarea id="dp-list-recipients" class="large-text code" rows="2" name="<?php echo esc_attr( $field( 'list_recipients' ) ); ?>" placeholder="house@example.org"><?php echo esc_textarea( $settings['list_recipients'] ); ?></textarea>
+					<p class="description"><?php esc_html_e( 'The address of the mailing list (or several, one per line). Leave empty to turn this mail off.', 'duty-planner' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="dp-list-day"><?php esc_html_e( 'Send on', 'duty-planner' ); ?></label></th>
+				<td>
+					<select id="dp-list-day" name="<?php echo esc_attr( $field( 'list_weekday' ) ); ?>">
+						<?php foreach ( Time::weekday_names() as $num => $name ) : ?>
+							<option value="<?php echo esc_attr( $num ); ?>" <?php selected( (int) $settings['list_weekday'], $num ); ?>><?php echo esc_html( $name ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<?php esc_html_e( 'at', 'duty-planner' ); ?>
+					<input type="time" name="<?php echo esc_attr( $field( 'list_time' ) ); ?>" value="<?php echo esc_attr( $settings['list_time'] ); ?>" aria-label="<?php esc_attr_e( 'Time', 'duty-planner' ); ?>">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="dp-list-target"><?php esc_html_e( 'Covers', 'duty-planner' ); ?></label></th>
+				<td>
+					<select id="dp-list-target" name="<?php echo esc_attr( $field( 'list_target' ) ); ?>">
+						<option value="next" <?php selected( $settings['list_target'], 'next' ); ?>><?php esc_html_e( 'the following week (Mon–Sun)', 'duty-planner' ); ?></option>
+						<option value="current" <?php selected( $settings['list_target'], 'current' ); ?>><?php esc_html_e( 'the rest of the current week', 'duty-planner' ); ?></option>
+					</select>
+				</td>
+			</tr>
+		</table>
+
 		<h2 class="title"><?php esc_html_e( 'Sign-up allowlist', 'duty-planner' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<tr>
@@ -205,6 +241,17 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 				<span class="description"><?php esc_html_e( '(already done)', 'duty-planner' ); ?></span>
 			<?php endif; ?>
 		</li>
+		<li>
+			<?php esc_html_e( 'Mailing list mail this week:', 'duty-planner' ); ?>
+			<?php if ( Settings::list_recipients() ) : ?>
+				<strong><?php echo esc_html( Time::format_datetime( $list_window['moment']->getTimestamp(), true ) ); ?></strong>
+				<?php if ( $last_list === $list_window['week'] ) : ?>
+					<span class="description"><?php esc_html_e( '(already done)', 'duty-planner' ); ?></span>
+				<?php endif; ?>
+			<?php else : ?>
+				<strong><?php esc_html_e( 'off (no mailing list address)', 'duty-planner' ); ?></strong>
+			<?php endif; ?>
+		</li>
 	</ul>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<?php Admin::form_fields( 'dutyplan_test_alert' ); ?>
@@ -216,6 +263,21 @@ $last_alert = get_option( Scheduler::LAST_ALERT_OPT );
 					/* translators: %s: period */
 					esc_html__( 'Checks %s and emails the recipients if any duty is understaffed. Does not affect the weekly schedule.', 'duty-planner' ),
 					esc_html( Time::format_date( $window['from'] ) . ' – ' . Time::format_date( $window['to'] ) )
+				);
+				?>
+			</span>
+		</p>
+	</form>
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<?php Admin::form_fields( 'dutyplan_test_list' ); ?>
+		<p>
+			<button class="button"><?php esc_html_e( 'Send mailing list mail now', 'duty-planner' ); ?></button>
+			<span class="description">
+				<?php
+				printf(
+					/* translators: %s: period */
+					esc_html__( 'Sends the overview for %s to the mailing list. Does not affect the weekly schedule.', 'duty-planner' ),
+					esc_html( Time::format_date( $list_window['from'] ) . ' – ' . Time::format_date( $list_window['to'] ) )
 				);
 				?>
 			</span>

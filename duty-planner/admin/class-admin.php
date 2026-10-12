@@ -17,7 +17,7 @@ class Admin {
 		add_action( 'admin_notices', array( self::class, 'notices' ) );
 		add_filter( 'display_post_states', array( self::class, 'post_states' ), 10, 2 );
 
-		foreach ( array( 'save_spot', 'delete_spot', 'add_registration', 'remove_registration', 'skip', 'unskip', 'test_alert' ) as $action ) {
+		foreach ( array( 'save_spot', 'delete_spot', 'add_registration', 'remove_registration', 'skip', 'unskip', 'test_alert', 'test_list' ) as $action ) {
 			add_action( "admin_post_dutyplan_{$action}", array( self::class, "handle_{$action}" ) );
 		}
 	}
@@ -114,7 +114,8 @@ class Admin {
 
 	public static function page_settings() {
 		$settings = Settings::all();
-		$window   = Scheduler::alert_window( Time::now() );
+		$window      = Scheduler::alert_window( Time::now() );
+		$list_window = Scheduler::list_window( Time::now() );
 		include DUTYPLAN_DIR . 'admin/views/settings.php';
 	}
 
@@ -275,6 +276,23 @@ class Admin {
 		}
 		/* translators: %s: period */
 		self::redirect( $back, 'success', sprintf( __( 'All duties for %s have reached their minimum – no alert needed.', 'duty-planner' ), $period ) );
+	}
+
+	public static function handle_test_list() {
+		self::verify( 'dutyplan_test_list' );
+		$back = self::url( 'dutyplan-settings' );
+		if ( ! Settings::list_recipients() ) {
+			self::redirect( $back, 'error', __( 'Please enter the mailing list address first.', 'duty-planner' ) );
+		}
+		$window = Scheduler::list_window( Time::now() );
+		$result = Scheduler::send_list_mail( $window['from'], $window['to'] );
+		$period = Time::format_date( $window['from'] ) . ' – ' . Time::format_date( $window['to'] );
+		if ( $result['open'] || $result['covered'] ) {
+			/* translators: 1: period, 2: duties that need people, 3: covered duties */
+			self::redirect( $back, 'success', sprintf( __( 'Mailing list mail for %1$s sent: %2$d duties need people, %3$d are covered.', 'duty-planner' ), $period, $result['open'], $result['covered'] ) );
+		}
+		/* translators: %s: period */
+		self::redirect( $back, 'success', sprintf( __( 'There are no duties in %s – nothing sent.', 'duty-planner' ), $period ) );
 	}
 
 	/* --------------------------------------------------------------- Helpers */

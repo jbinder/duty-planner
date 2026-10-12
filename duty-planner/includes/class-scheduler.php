@@ -4,13 +4,14 @@ namespace DutyPlanner;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WP-Cron: registrant reminders and the weekly admin alert.
+ * WP-Cron: registrant reminders, the weekly admin alert and the weekly mailing list mail.
  */
 class Scheduler {
 
 	const HOOK            = 'dutyplan_tick';
 	const RECURRENCE      = 'dutyplan_15min';
 	const LAST_ALERT_OPT  = 'dutyplan_last_alert_week';
+	const LAST_LIST_OPT   = 'dutyplan_last_list_week';
 
 	public static function init() {
 		add_filter( 'cron_schedules', array( self::class, 'schedules' ) );
@@ -43,6 +44,7 @@ class Scheduler {
 	public static function tick() {
 		self::send_reminders();
 		self::maybe_send_admin_alert();
+		self::maybe_send_list_mail();
 	}
 
 	/** @return int Number of reminders sent. */
@@ -75,17 +77,28 @@ class Scheduler {
 		return $sent;
 	}
 
+	/** @return array{moment:\DateTimeImmutable,from:string,to:string,week:string} */
+	public static function alert_window( \DateTimeImmutable $now ): array {
+		return self::window( $now, 'alert' );
+	}
+
+	/** @return array{moment:\DateTimeImmutable,from:string,to:string,week:string} */
+	public static function list_window( \DateTimeImmutable $now ): array {
+		return self::window( $now, 'list' );
+	}
+
 	/**
-	 * Alert moment and checked period for the week containing $now.
+	 * Send moment and covered period for the week containing $now.
 	 *
+	 * @param string $prefix Settings prefix: 'alert' or 'list'.
 	 * @return array{moment:\DateTimeImmutable,from:string,to:string,week:string}
 	 */
-	public static function alert_window( \DateTimeImmutable $now ): array {
+	private static function window( \DateTimeImmutable $now, string $prefix ): array {
 		$monday = $now->setTime( 0, 0 )->modify( '-' . ( (int) $now->format( 'N' ) - 1 ) . ' days' );
-		list( $h, $m ) = array_map( 'intval', explode( ':', Settings::get( 'alert_time' ) ) );
-		$moment        = $monday->modify( '+' . ( (int) Settings::get( 'alert_weekday' ) - 1 ) . ' days' )->setTime( $h, $m );
+		list( $h, $m ) = array_map( 'intval', explode( ':', Settings::get( "{$prefix}_time" ) ) );
+		$moment        = $monday->modify( '+' . ( (int) Settings::get( "{$prefix}_weekday" ) - 1 ) . ' days' )->setTime( $h, $m );
 
-		if ( 'current' === Settings::get( 'alert_target' ) ) {
+		if ( 'current' === Settings::get( "{$prefix}_target" ) ) {
 			$from = $now->format( 'Y-m-d' );
 			$to   = $monday->modify( '+6 days' )->format( 'Y-m-d' );
 		} else {
@@ -158,5 +171,89 @@ class Scheduler {
 			)
 		);
 		return count( $items );
+	}
+
+	/** "Anna, Ben and Cem" – in the plugin language (wp_sprintf_l() would follow the site language). */
+	private static function join_names( array $names ): string {
+		$last = array_pop( $names );
+		/* translators: 1: comma-separated names, 2: last name */
+		return $names ? sprintf( __( '%1$s and %2$s', 'duty-planner' ), implode( ', ', $names ), $last ) : (string) $last;
+	}
+
+	public static function maybe_send_list_mail( ?\DateTimeImmutable $now = null ): void {
+		$now    = $now ?: Time::now();
+		$window = self::list_window( $now );
+		if ( ! Settings::list_recipients() || $now < $window['moment'] || get_option( self::LAST_LIST_OPT ) === $window['week'] ) {
+			return;
+		}
+		update_option( self::LAST_LIST_OPT, $window['week'], false );
+		self::send_list_mail( $window['from'], $window['to'] );
+	}
+
+	/**
+	 * Weekly overview for the mailing list: asks everyone to jump in for duties below their
+	 * minimum, and thanks the people who signed up for the others.
+	 *
+	 * @return array{open:int,covered:int} Number of duties listed (both 0 = nothing sent).
+	 */
+	public static function send_list_mail( string $from, string $to ): array {
+		$result     = array( 'open' => 0, 'covered' => 0 );
+		$recipients = Settings::list_recipients();
+		$items      = array_filter(
+			Occurrences::between( $from, $to ),
+			static function ( $o ) {
+				return ! $o['skipped'] && ! $o['past'];
+			}
+		);
+		if ( ! $recipients || ! $items ) {
+			return $result;
+		}
+
+		$open    = array();
+		$covered = array();
+		foreach ( $items as $o ) {
+			$when  = $o['date_label'] . ( $o['all_day'] ? '' : ', ' . $o['time_label'] );
+			$names = self::join_names(
+				array_map(
+					static function ( $p ) {
+						return '' !== $p['note'] ? $p['name'] . ' (' . $p['note'] . ')' : $p['name'];
+					},
+					$o['people']
+				)
+			);
+			if ( $o['count'] < $o['min'] ) {
+				$open[] = '• ' . $when . ': ' . $o['title'] . ' – ' . ( $o['count']
+					/* translators: 1: people signed up, 2: minimum needed, 3: their names (with notes) */
+					? sprintf( _n( '%1$d of %2$d person so far: %3$s', '%1$d of %2$d people so far: %3$s', $o['min'], 'duty-planner' ), $o['count'], $o['min'], $names )
+					/* translators: %d: minimum needed */
+					: sprintf( _n( '%d person needed, nobody yet', '%d people needed, nobody yet', $o['min'], 'duty-planner' ), $o['min'] ) );
+			} else {
+				/* translators: %s: names of the people signed up (with notes) */
+				$covered[] = '• ' . $when . ': ' . $o['title'] . ' – ' . sprintf( __( 'thank you, %s!', 'duty-planner' ), $names );
+			}
+		}
+
+		$open_block = $open
+			? __( 'These duties still need people – please jump in!', 'duty-planner' ) . "\n\n" . implode( "\n", $open )
+			: __( 'Every duty is covered – nothing left to do.', 'duty-planner' );
+		$covered_block = $covered
+			? __( 'Already covered – a big thank you to everyone who signed up:', 'duty-planner' ) . "\n\n" . implode( "\n", $covered )
+			: '';
+		$status = $open
+			/* translators: %d: number of duties that still need people */
+			? sprintf( _n( '%d duty still needs you', '%d duties still need you', count( $open ), 'duty-planner' ), count( $open ) )
+			: __( 'everything covered – thank you!', 'duty-planner' );
+
+		Mailer::send_template(
+			'list',
+			$recipients,
+			array(
+				'week'    => Time::format_date( $from ) . ' – ' . Time::format_date( $to ),
+				'status'  => $status,
+				'open'    => $open_block,
+				'covered' => $covered_block,
+			)
+		);
+		return array( 'open' => count( $open ), 'covered' => count( $covered ) );
 	}
 }

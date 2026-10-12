@@ -23,14 +23,15 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
 - **Self-service changes** via a signed personal link in every confirmation and reminder email (placeholder `{manage_url}`; the old `{cancel_url}` still works). The link opens a page where people can change their name and note, cancel, or cancel and pick another date in the calendar. The email address can't be changed there: the link is tied to it, so a new address means cancelling and signing up again. Every change needs a button press, so mail scanners can't change or cancel anything.
 - **Lost the email?** Below the calendar, *Change or cancel your registration* asks for an email address and sends a list of that person's upcoming duties with their links. The answer on the page is the same whether or not the address is registered, so it doesn't reveal who signed up, and each address gets at most one such email every 10 minutes.
 - **Weekly admin alert**: recipients, weekday and time are configurable. It lists duties below their minimum in the next week (or the rest of the current one), and sends nothing if every duty is covered.
+- **Weekly mail to the mailing list** (optional): set a mailing list address (e.g. the whole building), plus a weekday, time and period. Everyone on the list gets an overview of the period's duties. Duties below their minimum come first, with a request to jump in. Covered duties are listed with a thank-you to the people who signed up, by display name and with their notes. It goes out every week, even when everything is covered. Placeholders `{open}`, `{covered}` and `{status}`.
 - **Admin screens**:
   - Schedule: fill status, registrants with emails, add/remove people, cancel/restore single dates.
   - Spots.
-  - Settings, including a "Send admin alert now" button.
+  - Settings, including "Send admin alert now" and "Send mailing list mail now" buttons.
 - Protection for public sign-up: overbooking lock, duplicate check, honeypot, nonce and a per-IP rate limit.
 - Hooks into WordPress privacy export/erase. Uninstall deletes the data only if you opt in.
 
-Background jobs run on WP-Cron every 15 minutes.
+Background jobs (reminders, admin alert, mailing list mail) run on WP-Cron every 15 minutes.
 
 ## Installation
 
@@ -58,6 +59,7 @@ If you'd rather copy files over SFTP or SSH, put the `duty-planner/` folder into
 2. **Duty Planner → Settings**:
    - choose that page as **Calendar page**. Tick **Keep the calendar page unlisted** if it should be reachable only by its link. The link (with a *Copy link* button) is then shown at the top of the plugin's Schedule, Spots and Settings screens, and the page is labelled *Duty Planner calendar* in the Pages list.
    - fill in the **alert recipients**, plus the weekday and time for the weekly alert.
+   - optionally enter the **mailing list** address for the weekly overview to everyone, plus its weekday and time.
    - optionally set the sender name/email, the allowlist and the email texts.
 3. **Duty Planner → Add spot**: create your duties.
 
