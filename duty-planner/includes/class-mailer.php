@@ -43,7 +43,7 @@ class Mailer {
 				"Hello,\n\nthe following duties for {week} have not reached their minimum number of people yet:\n\n{list}\n\nManage the schedule: {admin_url}\nCalendar: {calendar_url}",
 				'duty-planner'
 			),
-			'tpl_list_subject'         => __( 'Duties {week}: {status}', 'duty-planner' ),
+			'tpl_list_subject'         => __( '{location}: plan for the next {weeks} weeks', 'duty-planner' ),
 			'tpl_list_body'            => __(
 				"Hello everyone,\n\nhere is the duty plan for {week}.\n\n{open}\n\n{covered}\n\nSign up or check the calendar: {calendar_url}\n\nThank you for keeping our building running!",
 				'duty-planner'
@@ -69,8 +69,10 @@ class Mailer {
 			'{list}'         => __( 'Admin alert: list of understaffed duties. Overview of registrations: list of upcoming duties with their links', 'duty-planner' ),
 			'{admin_url}'    => __( 'Admin alert only: link to the schedule screen', 'duty-planner' ),
 			'{open}'         => __( 'Mailing list only: duties that still need people, with a call to jump in (or a note that everything is covered)', 'duty-planner' ),
-			'{covered}'      => __( 'Mailing list only: covered duties with the names (and notes) of the people, and a thank-you', 'duty-planner' ),
+			'{covered}'      => __( 'Mailing list only: covered duties with the first names (and notes) of the people, and a thank-you', 'duty-planner' ),
 			'{status}'       => __( 'Mailing list only: how many duties still need people, for the subject', 'duty-planner' ),
+			'{location}'     => __( 'Mailing list only: the location set above (or the site title)', 'duty-planner' ),
+			'{weeks}'        => __( 'Mailing list only: number of weeks covered', 'duty-planner' ),
 		);
 	}
 

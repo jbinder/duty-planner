@@ -27,6 +27,8 @@ class Settings {
 			'list_weekday'           => 7,
 			'list_time'              => '18:00',
 			'list_target'            => 'next',
+			'list_weeks'             => 2,
+			'list_location'          => '',
 			'allowlist'              => '',
 			'delete_data'            => 0,
 		) + Mailer::default_templates();
@@ -120,6 +122,9 @@ class Settings {
 			$out[ "{$prefix}_time" ]       = self::sanitize_time( $in[ "{$prefix}_time" ] ?? '', $def[ "{$prefix}_time" ] );
 			$out[ "{$prefix}_target" ]     = in_array( $in[ "{$prefix}_target" ] ?? '', array( 'next', 'current' ), true ) ? $in[ "{$prefix}_target" ] : 'next';
 		}
+
+		$out['list_weeks']    = min( 8, max( 1, absint( $in['list_weeks'] ?? $def['list_weeks'] ) ) );
+		$out['list_location'] = sanitize_text_field( $in['list_location'] ?? '' );
 
 		$out['allowlist']   = Allowlist::sanitize( (string) ( $in['allowlist'] ?? '' ) );
 		$out['delete_data'] = empty( $in['delete_data'] ) ? 0 : 1;

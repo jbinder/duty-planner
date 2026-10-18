@@ -147,13 +147,20 @@ $last_list  = get_option( Scheduler::LAST_LIST_OPT );
 		</table>
 
 		<h2 class="title"><?php esc_html_e( 'Weekly mail to the mailing list', 'duty-planner' ); ?></h2>
-		<p><?php esc_html_e( 'Once a week, everyone on the mailing list gets an overview of the duties: those that still need people, with a request to jump in, and those already covered, with a thank-you to the people who signed up. Their display names are included.', 'duty-planner' ); ?></p>
+		<p><?php esc_html_e( 'Once a week, everyone on the mailing list gets an overview of the duties: those that still need people, with a request to jump in, and those already covered, with a thank-you to the people who signed up. Only their first names are included.', 'duty-planner' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row"><label for="dp-list-recipients"><?php esc_html_e( 'Mailing list', 'duty-planner' ); ?></label></th>
 				<td>
 					<textarea id="dp-list-recipients" class="large-text code" rows="2" name="<?php echo esc_attr( $field( 'list_recipients' ) ); ?>" placeholder="house@example.org"><?php echo esc_textarea( $settings['list_recipients'] ); ?></textarea>
 					<p class="description"><?php esc_html_e( 'The address of the mailing list (or several, one per line). Leave empty to turn this mail off.', 'duty-planner' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="dp-list-location"><?php esc_html_e( 'Location', 'duty-planner' ); ?></label></th>
+				<td>
+					<input type="text" id="dp-list-location" class="regular-text" name="<?php echo esc_attr( $field( 'list_location' ) ); ?>" value="<?php echo esc_attr( $settings['list_location'] ); ?>" placeholder="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+					<p class="description"><?php esc_html_e( 'Name of the room or place the duties are for, e.g. "Open Space". Used as {location} in the subject; empty means the site title.', 'duty-planner' ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -171,10 +178,13 @@ $last_list  = get_option( Scheduler::LAST_LIST_OPT );
 			<tr>
 				<th scope="row"><label for="dp-list-target"><?php esc_html_e( 'Covers', 'duty-planner' ); ?></label></th>
 				<td>
-					<select id="dp-list-target" name="<?php echo esc_attr( $field( 'list_target' ) ); ?>">
-						<option value="next" <?php selected( $settings['list_target'], 'next' ); ?>><?php esc_html_e( 'the following week (Mon–Sun)', 'duty-planner' ); ?></option>
-						<option value="current" <?php selected( $settings['list_target'], 'current' ); ?>><?php esc_html_e( 'the rest of the current week', 'duty-planner' ); ?></option>
+					<input type="number" id="dp-list-target" class="small-text" min="1" max="8" name="<?php echo esc_attr( $field( 'list_weeks' ) ); ?>" value="<?php echo esc_attr( $settings['list_weeks'] ); ?>">
+					<?php esc_html_e( 'weeks, starting', 'duty-planner' ); ?>
+					<select name="<?php echo esc_attr( $field( 'list_target' ) ); ?>" aria-label="<?php esc_attr_e( 'Start of the period', 'duty-planner' ); ?>">
+						<option value="next" <?php selected( $settings['list_target'], 'next' ); ?>><?php esc_html_e( 'with the following week (Mon)', 'duty-planner' ); ?></option>
+						<option value="current" <?php selected( $settings['list_target'], 'current' ); ?>><?php esc_html_e( 'with the rest of the current week', 'duty-planner' ); ?></option>
 					</select>
+					<p class="description"><?php esc_html_e( 'The mail still goes out once a week, so with 2 or more weeks each duty shows up in several mails.', 'duty-planner' ); ?></p>
 				</td>
 			</tr>
 		</table>

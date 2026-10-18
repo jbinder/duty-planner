@@ -98,12 +98,14 @@ class Scheduler {
 		list( $h, $m ) = array_map( 'intval', explode( ':', Settings::get( "{$prefix}_time" ) ) );
 		$moment        = $monday->modify( '+' . ( (int) Settings::get( "{$prefix}_weekday" ) - 1 ) . ' days' )->setTime( $h, $m );
 
+		// The admin alert always covers one week, the mailing list mail a configurable number.
+		$weeks = 'list' === $prefix ? max( 1, (int) Settings::get( 'list_weeks' ) ) : 1;
 		if ( 'current' === Settings::get( "{$prefix}_target" ) ) {
 			$from = $now->format( 'Y-m-d' );
-			$to   = $monday->modify( '+6 days' )->format( 'Y-m-d' );
+			$to   = $monday->modify( '+' . ( 7 * $weeks - 1 ) . ' days' )->format( 'Y-m-d' );
 		} else {
 			$from = $monday->modify( '+7 days' )->format( 'Y-m-d' );
-			$to   = $monday->modify( '+13 days' )->format( 'Y-m-d' );
+			$to   = $monday->modify( '+' . ( 7 * $weeks + 6 ) . ' days' )->format( 'Y-m-d' );
 		}
 		return array(
 			'moment' => $moment,
@@ -180,6 +182,58 @@ class Scheduler {
 		return $names ? sprintf( __( '%1$s and %2$s', 'duty-planner' ), implode( ', ', $names ), $last ) : (string) $last;
 	}
 
+	/**
+	 * Short names for the mailing list mail, so last names don't go out to everyone:
+	 * "Laura Müller" and "Müller, Laura" become "Laura". If two different people in the
+	 * same mail share a first name, the initial of the last name is added ("Laura M.").
+	 *
+	 * @param string[] $full Full display names.
+	 * @return array<string,string> Full name => short name.
+	 */
+	private static function short_names( array $full ): array {
+		$split = array();
+		foreach ( array_unique( $full ) as $name ) {
+			$clean = trim( preg_replace( '/\s+/u', ' ', $name ) );
+			if ( false !== strpos( $clean, ',' ) ) {
+				list( $last, $first ) = array_map( 'trim', explode( ',', $clean, 2 ) );
+				$clean                = trim( $first . ' ' . $last );
+			}
+			$parts = explode( ' ', $clean );
+			// Skip titles such as "Dr." in front of the first name.
+			while ( count( $parts ) > 1 && '.' === substr( $parts[0], -1 ) ) {
+				array_shift( $parts );
+			}
+			$split[ $name ] = array( $parts[0], count( $parts ) > 1 ? end( $parts ) : '' );
+		}
+
+		$per_first = array_count_values(
+			array_map(
+				static function ( $parts ) {
+					return mb_strtolower( $parts[0] );
+				},
+				$split
+			)
+		);
+		$short = array();
+		foreach ( $split as $name => list( $first, $last ) ) {
+			$short[ $name ] = $per_first[ mb_strtolower( $first ) ] > 1 && '' !== $last
+				? $first . ' ' . mb_substr( $last, 0, 1 ) . '.'
+				: $first;
+		}
+		return $short;
+	}
+
+	/** "Laura: bring cake · Ben: plays guitar" – or just the note, if only one person is named. */
+	private static function notes( array $people, array $short ): string {
+		$notes = array();
+		foreach ( $people as $p ) {
+			if ( '' !== $p['note'] ) {
+				$notes[] = 1 === count( $people ) ? $p['note'] : $short[ $p['name'] ] . ': ' . $p['note'];
+			}
+		}
+		return implode( ' · ', $notes );
+	}
+
 	public static function maybe_send_list_mail( ?\DateTimeImmutable $now = null ): void {
 		$now    = $now ?: Time::now();
 		$window = self::list_window( $now );
@@ -209,27 +263,37 @@ class Scheduler {
 			return $result;
 		}
 
+		$all_names = array();
+		foreach ( $items as $o ) {
+			$all_names = array_merge( $all_names, array_column( $o['people'], 'name' ) );
+		}
+		$short = self::short_names( $all_names );
+
 		$open    = array();
 		$covered = array();
 		foreach ( $items as $o ) {
 			$when  = $o['date_label'] . ( $o['all_day'] ? '' : ', ' . $o['time_label'] );
 			$names = self::join_names(
 				array_map(
-					static function ( $p ) {
-						return '' !== $p['note'] ? $p['name'] . ' (' . $p['note'] . ')' : $p['name'];
+					static function ( $p ) use ( $short ) {
+						return $short[ $p['name'] ];
 					},
 					$o['people']
 				)
 			);
+			$notes = self::notes( $o['people'], $short );
+			/* translators: %s: names of the people signed up */
+			$thanks = sprintf( __( 'thank you %s!', 'duty-planner' ), $names ) . ( '' !== $notes ? ' ' . $notes : '' );
+			$line   = '• ' . $when . ': ' . $o['title'] . ' – ';
 			if ( $o['count'] < $o['min'] ) {
-				$open[] = '• ' . $when . ': ' . $o['title'] . ' – ' . ( $o['count']
-					/* translators: 1: people signed up, 2: minimum needed, 3: their names (with notes) */
-					? sprintf( _n( '%1$d of %2$d person so far: %3$s', '%1$d of %2$d people so far: %3$s', $o['min'], 'duty-planner' ), $o['count'], $o['min'], $names )
-					/* translators: %d: minimum needed */
-					: sprintf( _n( '%d person needed, nobody yet', '%d people needed, nobody yet', $o['min'], 'duty-planner' ), $o['min'] ) );
+				$missing = $o['min'] - $o['count'];
+				$open[]  = $line . ( 1 === $missing
+					? __( 'one more person needed', 'duty-planner' )
+					/* translators: %d: number of people still needed */
+					: sprintf( _n( '%d more person needed', '%d more people needed', $missing, 'duty-planner' ), $missing )
+				) . ( $o['count'] ? ' – ' . $thanks : '' );
 			} else {
-				/* translators: %s: names of the people signed up (with notes) */
-				$covered[] = '• ' . $when . ': ' . $o['title'] . ' – ' . sprintf( __( 'thank you, %s!', 'duty-planner' ), $names );
+				$covered[] = $line . $thanks;
 			}
 		}
 
@@ -248,10 +312,12 @@ class Scheduler {
 			'list',
 			$recipients,
 			array(
-				'week'    => Time::format_date( $from ) . ' – ' . Time::format_date( $to ),
-				'status'  => $status,
-				'open'    => $open_block,
-				'covered' => $covered_block,
+				'week'     => Time::format_date( $from ) . ' – ' . Time::format_date( $to ),
+				'weeks'    => max( 1, (int) Settings::get( 'list_weeks' ) ),
+				'location' => (string) Settings::get( 'list_location' ) ?: wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
+				'status'   => $status,
+				'open'     => $open_block,
+				'covered'  => $covered_block,
 			)
 		);
 		return array( 'open' => count( $open ), 'covered' => count( $covered ) );
