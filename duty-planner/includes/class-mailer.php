@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 class Mailer {
 
 	/** Template keys that are sent to registrants (as opposed to admins). */
-	const REGISTRANT_TEMPLATES = array( 'confirmation', 'reminder', 'cancellation', 'skip', 'overview' );
+	const REGISTRANT_TEMPLATES = array( 'confirmation', 'reminder', 'cancellation', 'skip', 'overview', 'contacts' );
 
 	public static function default_templates(): array {
 		return array(
@@ -36,6 +36,11 @@ class Mailer {
 			'tpl_overview_subject'     => __( 'Your duties at {site}', 'duty-planner' ),
 			'tpl_overview_body'        => __(
 				"Hi {name},\n\nyou asked for an overview of your registrations. These are your upcoming duties:\n\n{list}\n\nUse the link below a duty to change or cancel that registration.\n\nCalendar: {calendar_url}\n\nIf you did not request this email, you can simply ignore it.",
+				'duty-planner'
+			),
+			'tpl_contacts_subject'     => __( 'Who is on duty: {spot} on {date}', 'duty-planner' ),
+			'tpl_contacts_body'        => __(
+				"Hello everyone,\n\nthank you for signing up! Here is everyone on duty on {date}, so you can get in touch with each other and sort out any open questions. Replying to this email reaches all of you.\n\n{update}\n\n{contacts}\n\nCalendar: {calendar_url}",
 				'duty-planner'
 			),
 			'tpl_alert_subject'        => __( '{count} duties still need people ({week})', 'duty-planner' ),
@@ -73,6 +78,8 @@ class Mailer {
 			'{status}'       => __( 'Mailing list only: how many duties still need people, for the subject', 'duty-planner' ),
 			'{location}'     => __( 'Mailing list only: the location set above (or the site title)', 'duty-planner' ),
 			'{weeks}'        => __( 'Mailing list only: number of weeks covered', 'duty-planner' ),
+			'{contacts}'     => __( 'Contact list only: everyone on duty that day (incl. linked duties) with email and phone', 'duty-planner' ),
+			'{update}'       => __( 'Contact list only: who joined or left since the last contact list (empty in the first one)', 'duty-planner' ),
 		);
 	}
 
@@ -86,8 +93,9 @@ class Mailer {
 
 	/**
 	 * @param string|string[] $to
+	 * @param string[]        $headers Extra mail headers, e.g. Reply-To.
 	 */
-	public static function send_template( string $key, $to, array $vars ): bool {
+	public static function send_template( string $key, $to, array $vars, array $headers = array() ): bool {
 		$settings = Settings::all();
 		$vars    += array(
 			'site'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
@@ -96,7 +104,7 @@ class Mailer {
 		$subject = self::render( $settings[ "tpl_{$key}_subject" ], $vars );
 		// Empty placeholders (like {covered}) shouldn't leave a gap of blank lines behind.
 		$body    = preg_replace( "/\n{3,}/", "\n\n", self::render( str_replace( "\r\n", "\n", $settings[ "tpl_{$key}_body" ] ), $vars ) );
-		return self::send( $to, $subject, $body );
+		return self::send( $to, $subject, $body, $headers );
 	}
 
 	public static function registration_vars( $spot, $reg ): array {
@@ -205,8 +213,9 @@ class Mailer {
 
 	/**
 	 * @param string|string[] $to
+	 * @param string[]        $headers Extra mail headers.
 	 */
-	public static function send( $to, string $subject, string $body ): bool {
+	public static function send( $to, string $subject, string $body, array $headers = array() ): bool {
 		$from_name  = Settings::get( 'from_name' );
 		$from_email = Settings::get( 'from_email' );
 		$name_cb    = static function () use ( $from_name ) {
@@ -223,7 +232,7 @@ class Mailer {
 			add_filter( 'wp_mail_from', $email_cb );
 		}
 
-		$sent = wp_mail( $to, $subject, $body, array( 'Content-Type: text/plain; charset=UTF-8' ) );
+		$sent = wp_mail( $to, $subject, $body, array_merge( array( 'Content-Type: text/plain; charset=UTF-8' ), $headers ) );
 
 		remove_filter( 'wp_mail_from_name', $name_cb );
 		remove_filter( 'wp_mail_from', $email_cb );

@@ -13,7 +13,7 @@ if ( empty( $dutyplan_settings['delete_data'] ) ) {
 }
 
 global $wpdb;
-foreach ( array( 'registrations', 'skips', 'spots' ) as $dutyplan_table ) {
+foreach ( array( 'registrations', 'skips', 'contacts_sent', 'spots' ) as $dutyplan_table ) {
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}dutyplan_{$dutyplan_table}" ); // phpcs:ignore WordPress.DB
 }
 delete_option( 'dutyplan_settings' );

@@ -106,6 +106,9 @@ $nav = static function ( string $date ) use ( $days, $spot ) {
 								<li>
 									<?php echo esc_html( $p['name'] ); ?>
 									&lt;<a href="mailto:<?php echo esc_attr( $p['email'] ); ?>"><?php echo esc_html( $p['email'] ); ?></a>&gt;
+									<?php if ( '' !== $p['phone'] ) : ?>
+										<a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $p['phone'] ) ); ?>"><?php echo esc_html( $p['phone'] ); ?></a>
+									<?php endif; ?>
 									<?php if ( '' !== $p['note'] ) : ?>
 										<br><span class="dutyplan-note"><?php echo esc_html( $o['note_label'] . ': ' . $p['note'] ); ?></span>
 									<?php endif; ?>
@@ -131,6 +134,9 @@ $nav = static function ( string $date ) use ( $days, $spot ) {
 								<input type="hidden" name="date" value="<?php echo esc_attr( $o['date'] ); ?>">
 								<input type="text" name="name" required placeholder="<?php esc_attr_e( 'Name', 'duty-planner' ); ?>">
 								<input type="email" name="email" required placeholder="<?php esc_attr_e( 'Email', 'duty-planner' ); ?>">
+								<?php if ( '' !== $o['phone_field'] ) : ?>
+									<input type="tel" name="phone" maxlength="40" placeholder="<?php esc_attr_e( 'Phone', 'duty-planner' ); ?>">
+								<?php endif; ?>
 								<?php if ( '' !== $o['note_label'] ) : ?>
 									<input type="text" name="note" maxlength="200" placeholder="<?php echo esc_attr( $o['note_label'] ); ?>">
 								<?php endif; ?>

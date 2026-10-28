@@ -21,6 +21,7 @@ $templates  = array(
 	'cancellation' => __( 'Cancellation', 'duty-planner' ),
 	'skip'         => __( 'Date cancelled by admin', 'duty-planner' ),
 	'overview'     => __( 'Overview of registrations (requested from the calendar)', 'duty-planner' ),
+	'contacts'     => __( 'Contact list for everyone on duty', 'duty-planner' ),
 	'alert'        => __( 'Admin alert: duties need people', 'duty-planner' ),
 	'list'         => __( 'Mailing list: weekly duty overview', 'duty-planner' ),
 );

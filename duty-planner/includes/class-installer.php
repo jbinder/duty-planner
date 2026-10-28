@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Installer {
 
-	const DB_VERSION = '3';
+	const DB_VERSION = '4';
 
 	public static function activate() {
 		self::create_tables();
@@ -33,6 +33,7 @@ class Installer {
 		$spots   = Repository::table( 'spots' );
 		$regs    = Repository::table( 'registrations' );
 		$skips   = Repository::table( 'skips' );
+		$sent    = Repository::table( 'contacts_sent' );
 
 		dbDelta(
 			"CREATE TABLE {$spots} (
@@ -54,6 +55,10 @@ class Installer {
   reminder_offset_hours smallint(5) unsigned NOT NULL DEFAULT 24,
   allowlist text NULL,
   note_label varchar(190) NOT NULL DEFAULT '',
+  phone_field varchar(10) NOT NULL DEFAULT '',
+  contacts_days smallint(5) unsigned NULL DEFAULT NULL,
+  contacts_on_min tinyint(1) NOT NULL DEFAULT 0,
+  contact_group varchar(64) NOT NULL DEFAULT '',
   active tinyint(1) NOT NULL DEFAULT 1,
   created_at datetime NOT NULL,
   PRIMARY KEY  (id)
@@ -68,6 +73,7 @@ class Installer {
   display_name varchar(100) NOT NULL DEFAULT '',
   email varchar(190) NOT NULL DEFAULT '',
   note varchar(500) NOT NULL DEFAULT '',
+  phone varchar(40) NOT NULL DEFAULT '',
   reminder_sent_at datetime NULL DEFAULT NULL,
   created_at datetime NOT NULL,
   PRIMARY KEY  (id),
@@ -82,6 +88,18 @@ class Installer {
   spot_id bigint(20) unsigned NOT NULL,
   occurrence_date date NOT NULL,
   PRIMARY KEY  (spot_id,occurrence_date)
+) {$charset};"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$sent} (
+  unit_key varchar(190) NOT NULL,
+  occurrence_date date NOT NULL,
+  members text NULL,
+  hash char(32) NOT NULL DEFAULT '',
+  sent_at datetime NOT NULL,
+  PRIMARY KEY  (unit_key),
+  KEY occurrence_date (occurrence_date)
 ) {$charset};"
 		);
 

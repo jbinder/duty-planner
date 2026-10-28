@@ -562,6 +562,8 @@
 		var name = el( 'input', { type: 'text', id: uid + '-name', name: 'name', required: true, maxlength: '60', autocomplete: 'name', value: this.contact.name } );
 		var email = el( 'input', { type: 'email', id: uid + '-email', name: 'email', required: true, autocomplete: 'email', value: this.contact.email } );
 		var noteInput = item.note_label ? el( 'input', { type: 'text', id: uid + '-note', name: 'note', maxlength: '200', autocomplete: 'off' } ) : null;
+		var phoneRequired = item.phone_field === 'required';
+		var phone = item.phone_field ? el( 'input', { type: 'tel', id: uid + '-phone', name: 'phone', required: phoneRequired, maxlength: '40', autocomplete: 'tel', value: this.contact.phone || '' } ) : null;
 		var honeypot = el( 'input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off' } );
 		var submit = el( 'button', { type: 'submit', class: 'dp-btn dp-btn-primary', text: t.submit } );
 		var msg = el( 'p', { class: 'dp-message', role: 'alert', hidden: true } );
@@ -577,14 +579,20 @@
 			el( 'div', { class: 'dp-field' }, [
 				el( 'label', { for: uid + '-email', text: t.email } ),
 				email,
-				el( 'small', { text: t.emailHelp } ),
+				el( 'small', { text: item.contacts ? t.sharedHelp : t.emailHelp } ),
 			] ),
+			phone ? el( 'div', { class: 'dp-field' }, [
+				el( 'label', { for: uid + '-phone' }, [ t.phone + ' ', phoneRequired ? null : el( 'span', { class: 'dp-optional', text: t.optional } ) ] ),
+				phone,
+				el( 'small', { text: item.contacts ? t.sharedHelp : t.phoneHelp } ),
+			] ) : null,
 			noteInput ? el( 'div', { class: 'dp-field' }, [
 				el( 'label', { for: uid + '-note' }, [ item.note_label + ' ', el( 'span', { class: 'dp-optional', text: t.optional } ) ] ),
 				noteInput,
 				el( 'small', { text: t.noteHelp } ),
 			] ) : null,
 			el( 'div', { class: 'dp-hp', 'aria-hidden': 'true' }, [ el( 'label', { text: 'Website' } ), honeypot ] ),
+			item.contacts ? el( 'p', { class: 'dp-note', text: t.sharedNote } ) : null,
 			msg,
 			el( 'div', { class: 'dp-actions' }, [ submit ] ),
 		] );
@@ -594,7 +602,7 @@
 			if ( ! form.reportValidity() ) {
 				return;
 			}
-			self.contact = { name: name.value.trim(), email: email.value.trim() };
+			self.contact = { name: name.value.trim(), email: email.value.trim(), phone: phone ? phone.value.trim() : self.contact.phone };
 			submit.disabled = true;
 			submit.textContent = t.sending;
 			msg.hidden = true;
@@ -608,6 +616,7 @@
 					name: self.contact.name,
 					email: self.contact.email,
 					note: noteInput ? noteInput.value.trim() : '',
+					phone: phone ? phone.value.trim() : '',
 					website: honeypot.value,
 					nonce: self.nonce,
 				} ),

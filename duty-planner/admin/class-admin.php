@@ -98,6 +98,10 @@ class Admin {
 			'reminder_offset_hours' => (int) Settings::get( 'default_reminder_hours' ),
 			'allowlist'             => '',
 			'note_label'            => '',
+			'phone_field'           => '',
+			'contacts_days'         => '',
+			'contacts_on_min'       => false,
+			'contact_group'         => '',
 			'active'                => true,
 		);
 		$values = $spot ? array_merge( $defaults, array_filter( (array) $spot, static function ( $v ) { return null !== $v; } ) ) : $defaults;
@@ -151,6 +155,10 @@ class Admin {
 			'reminder_offset_hours' => min( 720, absint( $in['reminder_offset_hours'] ?? 0 ) ),
 			'allowlist'             => Allowlist::sanitize( (string) ( $in['allowlist'] ?? '' ) ),
 			'note_label'            => mb_substr( sanitize_text_field( $in['note_label'] ?? '' ), 0, 190 ),
+			'phone_field'           => in_array( $in['phone_field'] ?? '', array( 'optional', 'required' ), true ) ? $in['phone_field'] : '',
+			'contacts_days'         => '' === trim( (string) ( $in['contacts_days'] ?? '' ) ) ? '' : min( 60, absint( $in['contacts_days'] ) ),
+			'contacts_on_min'       => empty( $in['contacts_on_min'] ) ? 0 : 1,
+			'contact_group'         => mb_substr( sanitize_text_field( $in['contact_group'] ?? '' ), 0, 64 ),
 			'active'                => empty( $in['active'] ) ? 0 : 1,
 		);
 
@@ -182,9 +190,10 @@ class Admin {
 			self::redirect( self::url( 'dutyplan-spot', $id ? array( 'id' => $id ) : array() ), 'error', implode( ' ', $errors ) );
 		}
 
-		$data['end_date']   = '' === $data['end_date'] ? null : $data['end_date'];
-		$data['allowlist']  = '' === $data['allowlist'] ? null : $data['allowlist'];
-		$data['start_time'] = $all_day ? null : $data['start_time'] . ':00';
+		$data['end_date']      = '' === $data['end_date'] ? null : $data['end_date'];
+		$data['allowlist']     = '' === $data['allowlist'] ? null : $data['allowlist'];
+		$data['contacts_days'] = '' === $data['contacts_days'] ? null : $data['contacts_days'];
+		$data['start_time']    = $all_day ? null : $data['start_time'] . ':00';
 
 		Repository::save_spot( $data, $id );
 		self::redirect( self::url( 'dutyplan-spots' ), 'success', __( 'Spot saved.', 'duty-planner' ) );
@@ -211,6 +220,7 @@ class Admin {
 				'bypass_allowlist' => true,
 				'notify'           => ! empty( $in['notify'] ),
 				'note'             => (string) ( $in['note'] ?? '' ),
+				'phone'            => (string) ( $in['phone'] ?? '' ),
 			)
 		);
 		if ( is_wp_error( $reg ) ) {

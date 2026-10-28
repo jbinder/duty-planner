@@ -4,7 +4,7 @@ namespace DutyPlanner;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WP-Cron: registrant reminders, the weekly admin alert and the weekly mailing list mail.
+ * WP-Cron: registrant reminders, the weekly admin alert, the weekly mailing list mail and contact lists.
  */
 class Scheduler {
 
@@ -45,6 +45,7 @@ class Scheduler {
 		self::send_reminders();
 		self::maybe_send_admin_alert();
 		self::maybe_send_list_mail();
+		Contacts::maybe_send();
 	}
 
 	/** @return int Number of reminders sent. */
@@ -176,7 +177,7 @@ class Scheduler {
 	}
 
 	/** "Anna, Ben and Cem" – in the plugin language (wp_sprintf_l() would follow the site language). */
-	private static function join_names( array $names ): string {
+	public static function join_names( array $names ): string {
 		$last = array_pop( $names );
 		/* translators: 1: comma-separated names, 2: last name */
 		return $names ? sprintf( __( '%1$s and %2$s', 'duty-planner' ), implode( ', ', $names ), $last ) : (string) $last;

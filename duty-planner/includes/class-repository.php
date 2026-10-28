@@ -32,6 +32,10 @@ class Repository {
 		$row->allowlist             = (string) $row->allowlist;
 		$row->description           = (string) $row->description;
 		$row->note_label            = (string) ( $row->note_label ?? '' );
+		$row->phone_field           = in_array( $row->phone_field ?? '', array( 'optional', 'required' ), true ) ? $row->phone_field : '';
+		$row->contacts_days         = isset( $row->contacts_days ) ? (int) $row->contacts_days : null;
+		$row->contacts_on_min       = ! empty( $row->contacts_on_min );
+		$row->contact_group         = (string) ( $row->contact_group ?? '' );
 		$row->active                = (bool) $row->active;
 		return $row;
 	}
@@ -157,7 +161,7 @@ class Repository {
 		);
 	}
 
-	public static function insert_registration( int $spot_id, string $date, string $name, string $email, string $note = '' ): int {
+	public static function insert_registration( int $spot_id, string $date, string $name, string $email, string $note = '', string $phone = '' ): int {
 		global $wpdb;
 		$ok = $wpdb->insert(
 			self::table( 'registrations' ),
@@ -167,6 +171,7 @@ class Repository {
 				'display_name'    => $name,
 				'email'           => $email,
 				'note'            => $note,
+				'phone'           => $phone,
 				'created_at'      => current_time( 'mysql', true ),
 			)
 		);
@@ -178,9 +183,9 @@ class Repository {
 		return $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . self::table( 'registrations' ) . ' WHERE id = %d', $id ) );
 	}
 
-	public static function update_registration( int $id, string $name, string $note ): void {
+	public static function update_registration( int $id, string $name, string $note, string $phone ): void {
 		global $wpdb;
-		$wpdb->update( self::table( 'registrations' ), array( 'display_name' => $name, 'note' => $note ), array( 'id' => $id ) );
+		$wpdb->update( self::table( 'registrations' ), array( 'display_name' => $name, 'note' => $note, 'phone' => $phone ), array( 'id' => $id ) );
 	}
 
 	public static function delete_registration( int $id ): bool {
@@ -221,5 +226,42 @@ class Repository {
 	public static function delete_registrations_by_email( string $email ): int {
 		global $wpdb;
 		return (int) $wpdb->delete( self::table( 'registrations' ), array( 'email' => strtolower( $email ) ) );
+	}
+
+	/* ------------------------------------------------------- Contact lists */
+
+	/**
+	 * Contact lists already sent, from $from on.
+	 *
+	 * @return array<string,object> unit_key => row (members decoded to an array).
+	 */
+	public static function contacts_sent( string $from ): array {
+		global $wpdb;
+		$out = array();
+		foreach ( $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . self::table( 'contacts_sent' ) . ' WHERE occurrence_date >= %s', $from ) ) as $row ) {
+			$row->members           = (array) json_decode( (string) $row->members, true );
+			$out[ $row->unit_key ] = $row;
+		}
+		return $out;
+	}
+
+	/** @param array<int,string> $members Registration ID => display name. */
+	public static function save_contacts_sent( string $key, string $date, array $members, string $hash ): void {
+		global $wpdb;
+		$wpdb->replace(
+			self::table( 'contacts_sent' ),
+			array(
+				'unit_key'        => $key,
+				'occurrence_date' => $date,
+				'members'         => wp_json_encode( $members ),
+				'hash'            => $hash,
+				'sent_at'         => current_time( 'mysql', true ),
+			)
+		);
+	}
+
+	public static function purge_contacts_sent( string $before ): void {
+		global $wpdb;
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . self::table( 'contacts_sent' ) . ' WHERE occurrence_date < %s', $before ) );
 	}
 }

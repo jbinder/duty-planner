@@ -12,15 +12,17 @@ class Registration_Service {
 
 	const MAX_NAME_LENGTH = 60;
 	const MAX_NOTE_LENGTH = 200;
+	const MAX_PHONE_LENGTH = 40;
 
 	/**
-	 * @param array $opts bypass_allowlist (bool), notify (bool, send confirmation mail),
-	 *                    note (string, only kept if the spot has a note field).
+	 * @param array $opts bypass_allowlist (bool, also makes a required phone number optional, for admins),
+	 *                    notify (bool, send confirmation mail), note (string, only kept if the spot has a
+	 *                    note field), phone (string, only kept if the spot asks for one).
 	 * @return object|WP_Error The registration row.
 	 */
 	public static function register( int $spot_id, string $date, string $name, string $email, array $opts = array() ) {
 		global $wpdb;
-		$opts  = wp_parse_args( $opts, array( 'bypass_allowlist' => false, 'notify' => true, 'note' => '' ) );
+		$opts  = wp_parse_args( $opts, array( 'bypass_allowlist' => false, 'notify' => true, 'note' => '', 'phone' => '' ) );
 		$name  = trim( sanitize_text_field( $name ) );
 		$email = strtolower( trim( sanitize_email( $email ) ) );
 
@@ -38,7 +40,11 @@ class Registration_Service {
 		if ( ! $spot || ! $spot->active ) {
 			return new WP_Error( 'dutyplan_spot', __( 'This duty does not exist.', 'duty-planner' ), array( 'status' => 404 ) );
 		}
-		$note = '' === $spot->note_label ? '' : mb_substr( trim( sanitize_text_field( (string) $opts['note'] ) ), 0, self::MAX_NOTE_LENGTH );
+		$note  = '' === $spot->note_label ? '' : mb_substr( trim( sanitize_text_field( (string) $opts['note'] ) ), 0, self::MAX_NOTE_LENGTH );
+		$phone = self::phone( $spot, (string) $opts['phone'], ! $opts['bypass_allowlist'] );
+		if ( is_wp_error( $phone ) ) {
+			return $phone;
+		}
 		if ( ! Time::is_date( $date ) || ! Recurrence::occurs_on( $spot, $date, Repository::count_for( $spot_id, $date ) > 0 ) ) {
 			return new WP_Error( 'dutyplan_date', __( 'This duty does not take place on that date.', 'duty-planner' ), array( 'status' => 400 ) );
 		}
@@ -64,7 +70,7 @@ class Registration_Service {
 			if ( Repository::count_for( $spot_id, $date ) >= $spot->max_people ) {
 				return new WP_Error( 'dutyplan_full', __( 'Sorry, this duty is already fully booked.', 'duty-planner' ), array( 'status' => 409 ) );
 			}
-			$id = Repository::insert_registration( $spot_id, $date, $name, $email, $note );
+			$id = Repository::insert_registration( $spot_id, $date, $name, $email, $note, $phone );
 		} finally {
 			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock ) );
 		}
@@ -87,18 +93,47 @@ class Registration_Service {
 	 *
 	 * @return object|WP_Error The updated registration row.
 	 */
-	public static function update( $reg, string $name, string $note ) {
+	public static function update( $reg, string $name, string $note, string $phone = '' ) {
 		$name = mb_substr( trim( sanitize_text_field( $name ) ), 0, self::MAX_NAME_LENGTH );
 		if ( '' === $name ) {
 			return new WP_Error( 'dutyplan_name', __( 'Please enter your name.', 'duty-planner' ), array( 'status' => 400 ) );
 		}
 		$spot = Repository::get_spot( (int) $reg->spot_id );
 		$note = ( ! $spot || '' === $spot->note_label ) ? (string) $reg->note : mb_substr( trim( sanitize_text_field( $note ) ), 0, self::MAX_NOTE_LENGTH );
+		if ( $spot && '' !== $spot->phone_field ) {
+			$phone = self::phone( $spot, $phone );
+			if ( is_wp_error( $phone ) ) {
+				return $phone;
+			}
+		} else {
+			$phone = (string) $reg->phone;
+		}
 
-		Repository::update_registration( (int) $reg->id, $name, $note );
+		Repository::update_registration( (int) $reg->id, $name, $note, $phone );
 		$updated = Repository::get_registration( (int) $reg->id );
 		do_action( 'dutyplan_updated', $updated, $spot, $reg );
 		return $updated;
+	}
+
+	/**
+	 * Cleaned phone number: only digits, spaces and + ( ) / - . are kept.
+	 * Empty if the spot doesn't ask for one.
+	 *
+	 * @return string|WP_Error
+	 */
+	public static function phone( $spot, string $phone, bool $enforce_required = true ) {
+		if ( '' === $spot->phone_field ) {
+			return '';
+		}
+		$phone = trim( preg_replace( '/\s+/', ' ', preg_replace( '#[^0-9+()/\-. ]#', '', $phone ) ) );
+		$phone = mb_substr( $phone, 0, self::MAX_PHONE_LENGTH );
+		if ( '' !== $phone && ! preg_match( '/\d{3}/', preg_replace( '/\D/', '', $phone ) ) ) {
+			return new WP_Error( 'dutyplan_phone', __( 'Please enter a valid phone number.', 'duty-planner' ), array( 'status' => 400 ) );
+		}
+		if ( '' === $phone && $enforce_required && 'required' === $spot->phone_field ) {
+			return new WP_Error( 'dutyplan_phone', __( 'Please enter your phone number.', 'duty-planner' ), array( 'status' => 400 ) );
+		}
+		return $phone;
 	}
 
 	public static function cancel( $reg, bool $notify = true ): void {

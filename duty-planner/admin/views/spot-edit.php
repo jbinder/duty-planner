@@ -155,6 +155,42 @@ $weekday_names = Time::weekday_names();
 			</tr>
 		</table>
 
+		<h2 class="title"><?php esc_html_e( 'Contact list', 'duty-planner' ); ?></h2>
+		<p class="description"><?php esc_html_e( 'Optional. Everyone on duty gets an email with the names, email addresses and phone numbers of the others, so they can coordinate. Once the first list is out, everyone gets an updated one whenever someone joins or cancels. The sign-up form then tells people that their details are shared.', 'duty-planner' ); ?></p>
+		<table class="form-table" role="presentation">
+			<tr>
+				<th scope="row"><label for="dp-phone-field"><?php esc_html_e( 'Phone number', 'duty-planner' ); ?></label></th>
+				<td>
+					<select id="dp-phone-field" name="phone_field">
+						<option value="" <?php selected( $values['phone_field'], '' ); ?>><?php esc_html_e( 'Don\'t ask', 'duty-planner' ); ?></option>
+						<option value="optional" <?php selected( $values['phone_field'], 'optional' ); ?>><?php esc_html_e( 'Optional', 'duty-planner' ); ?></option>
+						<option value="required" <?php selected( $values['phone_field'], 'required' ); ?>><?php esc_html_e( 'Required', 'duty-planner' ); ?></option>
+					</select>
+					<p class="description"><?php esc_html_e( 'Asked for in the sign-up form. Never shown publicly; only in the contact list and on the admin schedule.', 'duty-planner' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Send the list', 'duty-planner' ); ?></th>
+				<td>
+					<fieldset>
+						<label>
+							<input type="number" id="dp-contacts-days" name="contacts_days" min="0" max="60" class="small-text" value="<?php echo esc_attr( (string) $values['contacts_days'] ); ?>">
+							<?php esc_html_e( 'days before the duty', 'duty-planner' ); ?>
+						</label>
+						<p class="description"><?php esc_html_e( 'Leave empty to not send it ahead of time. 0 = on the day itself.', 'duty-planner' ); ?></p>
+						<p><label><input type="checkbox" name="contacts_on_min" value="1" <?php checked( $values['contacts_on_min'] ); ?>> <?php esc_html_e( 'as soon as the minimum number of people has signed up', 'duty-planner' ); ?></label></p>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="dp-contact-group"><?php esc_html_e( 'Contact group', 'duty-planner' ); ?></label></th>
+				<td>
+					<input type="text" id="dp-contact-group" name="contact_group" class="regular-text" maxlength="64" value="<?php echo esc_attr( $values['contact_group'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. open-space', 'duty-planner' ); ?>">
+					<p class="description"><?php esc_html_e( 'Optional. Spots with the same group name share one contact list per day: everyone on any of them that day gets the details of all the others. Leave empty for a list of this spot only.', 'duty-planner' ); ?></p>
+				</td>
+			</tr>
+		</table>
+
 		<h2 class="title"><?php esc_html_e( 'Notifications', 'duty-planner' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<tr>

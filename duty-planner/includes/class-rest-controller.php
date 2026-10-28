@@ -59,6 +59,7 @@ class Rest_Controller {
 					'name'    => array( 'required' => true, 'type' => 'string' ),
 					'email'   => array( 'required' => true, 'type' => 'string' ),
 					'note'    => array( 'type' => 'string', 'default' => '' ),
+					'phone'   => array( 'type' => 'string', 'default' => '' ),
 					'nonce'   => array( 'required' => true, 'type' => 'string' ),
 					'website' => array( 'type' => 'string', 'default' => '' ), // Honeypot.
 				),
@@ -81,7 +82,7 @@ class Rest_Controller {
 		);
 	}
 
-	/** Strip everything not meant for the public (emails, registration IDs). */
+	/** Strip everything not meant for the public (emails, phone numbers, registration IDs). */
 	public static function public_item( array $o ): array {
 		$o['people'] = array_map(
 			static function ( $p ) {
@@ -132,7 +133,10 @@ class Rest_Controller {
 			(string) $request['date'],
 			(string) $request['name'],
 			(string) $request['email'],
-			array( 'note' => (string) $request['note'] )
+			array(
+				'note'  => (string) $request['note'],
+				'phone' => (string) $request['phone'],
+			)
 		);
 		if ( is_wp_error( $reg ) ) {
 			return $reg;

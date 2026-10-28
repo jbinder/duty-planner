@@ -10,7 +10,7 @@ class Occurrences {
 
 	/**
 	 * @param int[] $spot_ids       Restrict to these spots (empty = all active).
-	 * @param bool  $include_emails Include registration IDs and emails (admin only!).
+	 * @param bool  $include_emails Include registration IDs, emails and phone numbers (admin only!).
 	 */
 	public static function between( string $from, string $to, array $spot_ids = array(), bool $include_emails = false ): array {
 		$spots = Repository::get_spots( true, $spot_ids );
@@ -42,6 +42,7 @@ class Occurrences {
 					if ( $include_emails ) {
 						$person['id']    = (int) $reg->id;
 						$person['email'] = $reg->email;
+						$person['phone'] = (string) $reg->phone;
 					}
 					$people[] = $person;
 				}
@@ -56,6 +57,8 @@ class Occurrences {
 					'description' => Formatting::description_html( $spot->description ),
 					'location'    => $spot->location,
 					'note_label'  => $spot->note_label,
+					'phone_field' => $spot->phone_field,
+					'contacts'    => Contacts::enabled( $spot ),
 					'all_day'     => $spot->all_day,
 					'start'       => $start->format( DATE_ATOM ),
 					'end'         => $end->format( DATE_ATOM ),

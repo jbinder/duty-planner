@@ -43,6 +43,7 @@ class Privacy {
 					array( 'name' => __( 'Display name', 'duty-planner' ), 'value' => $reg->display_name ),
 					array( 'name' => __( 'Note', 'duty-planner' ), 'value' => $reg->note ),
 					array( 'name' => __( 'Email', 'duty-planner' ), 'value' => $reg->email ),
+					array( 'name' => __( 'Phone', 'duty-planner' ), 'value' => $reg->phone ),
 					array( 'name' => __( 'Registered at (UTC)', 'duty-planner' ), 'value' => $reg->created_at ),
 				),
 			);

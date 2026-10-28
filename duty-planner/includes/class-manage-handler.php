@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles ?dutyplan_manage=<id>&key=<hmac> links from emails: a small page where people
- * change their name or note, cancel, or cancel to pick another date.
+ * change their name, note or phone number, cancel, or cancel to pick another date.
  *
  * GET only shows the page; every change needs a POST, so link scanners in mail clients
  * can't change or cancel registrations by accident. The secret key in the URL also
@@ -74,7 +74,8 @@ class Manage_Handler {
 				$result = Registration_Service::update(
 					$reg,
 					isset( $_POST['name'] ) ? wp_unslash( (string) $_POST['name'] ) : '',
-					isset( $_POST['note'] ) ? wp_unslash( (string) $_POST['note'] ) : ''
+					isset( $_POST['note'] ) ? wp_unslash( (string) $_POST['note'] ) : '',
+					isset( $_POST['phone'] ) ? wp_unslash( (string) $_POST['phone'] ) : ''
 				);
 				if ( is_wp_error( $result ) ) {
 					$notice = '<p class="dp-manage-error" role="alert"><strong>' . esc_html( $result->get_error_message() ) . '</strong></p>';
@@ -114,6 +115,21 @@ class Manage_Handler {
 			);
 		}
 
+		$phone = '';
+		if ( $spot && '' !== $spot->phone_field ) {
+			$phone = sprintf(
+				'<p><label for="dp-manage-phone">%1$s%2$s</label><br><input type="tel" id="dp-manage-phone" name="phone" autocomplete="tel" maxlength="%3$d" value="%4$s"%5$s></p>',
+				esc_html__( 'Your phone number', 'duty-planner' ),
+				'required' === $spot->phone_field ? '' : ' <small>' . esc_html__( '(optional)', 'duty-planner' ) . '</small>',
+				Registration_Service::MAX_PHONE_LENGTH,
+				esc_attr( $reg->phone ),
+				'required' === $spot->phone_field ? ' required' : ''
+			);
+		}
+		$shared = $spot && Contacts::enabled( $spot )
+			? '<p><small>' . esc_html__( 'Your name, email address and phone number are shared with everyone on duty that day, so you can coordinate.', 'duty-planner' ) . '</small></p>'
+			: '';
+
 		return '<form method="post" class="dp-manage">'
 			. '<h2>' . esc_html__( 'Change your details', 'duty-planner' ) . '</h2>'
 			. sprintf(
@@ -122,7 +138,9 @@ class Manage_Handler {
 				Registration_Service::MAX_NAME_LENGTH,
 				esc_attr( $reg->display_name )
 			)
+			. $phone
 			. $note
+			. $shared
 			. '<p><small>' . esc_html(
 				/* translators: %s: email address */
 				sprintf( __( 'Registered with %s. To use a different email address, cancel and sign up again.', 'duty-planner' ), $reg->email )
@@ -138,7 +156,7 @@ class Manage_Handler {
 
 	private static function page( string $title, string $html, int $status = 200 ) {
 		nocache_headers();
-		$style = '<style>.dp-manage input[type=text]{width:100%;max-width:28em;padding:6px 8px;font-size:1em;box-sizing:border-box}'
+		$style = '<style>.dp-manage input[type=text],.dp-manage input[type=tel]{width:100%;max-width:28em;padding:6px 8px;font-size:1em;box-sizing:border-box}'
 			. '.dp-manage h2{font-size:1.15em;margin:1.6em 0 .4em;border:0;padding:0}'
 			. '.dp-manage-actions .button{margin:0 .4em .4em 0}'
 			. '.dp-manage .button-primary{background:#2271b1;border-color:#2271b1;color:#fff}'

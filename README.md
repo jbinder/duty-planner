@@ -12,6 +12,8 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
 - **Public calendar** via the shortcode `[duty_planner]` (options: `view="month|list"`, `weeks="6"`, `spots="1,2"`). It has a month grid that becomes an agenda on phones, a list view, and a sign-up dialog. Only display names are public. Emails are never sent to the browser.
 - **Formatted descriptions:** the description of a spot is edited with WordPress' small text editor (bold, italic, bullet/numbered lists, links). Only these safe tags are kept; scripts and event handlers are removed.
 - **Note field** (optional, per spot): give it a label such as "What will you bring?" and people can leave a short note (max. 200 characters) when signing up. Notes are shown publicly next to the name in the calendar, in the admin schedule, and via the `{note}` email placeholder. Without a label the field is hidden.
+- **Phone number** (per spot): don't ask, optional or required. It's never shown publicly, only in the contact list, on the admin schedule and on the person's own manage page.
+- **Contact list** (optional, per spot): everyone on duty gets one email with the names, email addresses and phone numbers of all the others, so they can coordinate. Replies go to the whole group. Choose when it goes out: *N days before the duty*, *as soon as the minimum is reached*, or both. The first list needs at least two people on it. After that, everyone gets an updated list (who's new, who left) whenever someone joins, cancels or changes their details. The sign-up form and manage page tell people that their details are shared. **Contact groups:** spots with the same group name (e.g. `open-space`) share one list per day, so a daily duty and the events on the same day see each other.
 - **Unlisted calendar page** (optional): the page stays reachable by its link but is left out of automatic page menus, site search, the sitemap and the public REST page list, and is marked `noindex`.
 - **Languages:** English and German (informal "du"), switchable under *Settings → Language*. Choose a language explicitly or let it follow the WordPress language. The setting covers the calendar, all emails and the plugin's admin screens, including dates and weekday/month names. Email texts you haven't edited switch along; edited texts stay as written.
 - **Allowlist** (optional): addresses or `@domains`, set globally or per spot (a spot's own list overrides the global one).
@@ -20,7 +22,8 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
   - reminder (offset **per spot**; all-day spots count back from a configurable reference time);
   - cancellation;
   - "date cancelled" notice;
-  - overview of a person's registrations (`{list}`), requested from the calendar.
+  - overview of a person's registrations (`{list}`), requested from the calendar;
+  - contact list (`{contacts}`, `{update}`).
 - **Self-service changes** via a signed personal link in every confirmation and reminder email (placeholder `{manage_url}`; the old `{cancel_url}` still works). The link opens a page where people can change their name and note, cancel, or cancel and pick another date in the calendar. The email address can't be changed there: the link is tied to it, so a new address means cancelling and signing up again. Every change needs a button press, so mail scanners can't change or cancel anything.
 - **Lost the email?** Below the calendar, *Change or cancel your registration* asks for an email address and sends a list of that person's upcoming duties with their links. The answer on the page is the same whether or not the address is registered, so it doesn't reveal who signed up, and each address gets at most one such email every 10 minutes.
 - **Weekly admin alert**: recipients, weekday and time are configurable. It lists duties below their minimum in the next week (or the rest of the current one), and sends nothing if every duty is covered.
@@ -32,7 +35,7 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
 - Protection for public sign-up: overbooking lock, duplicate check, honeypot, nonce and a per-IP rate limit.
 - Hooks into WordPress privacy export/erase. Uninstall deletes the data only if you opt in.
 
-Background jobs (reminders, admin alert, mailing list mail) run on WP-Cron every 15 minutes.
+Background jobs (reminders, admin alert, mailing list mail, contact lists) run on WP-Cron every 15 minutes.
 
 ## Installation
 
