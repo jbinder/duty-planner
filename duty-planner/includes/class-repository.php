@@ -23,6 +23,7 @@ class Repository {
 		$row->weekdays              = array_values( array_filter( array_map( 'intval', explode( ',', (string) $row->weekdays ) ) ) );
 		$row->interval_n            = max( 1, (int) $row->interval_n );
 		$row->end_date              = ( $row->end_date && '0000-00-00' !== $row->end_date ) ? $row->end_date : null;
+		$row->skip_holidays         = ! empty( $row->skip_holidays );
 		$row->all_day               = (bool) $row->all_day;
 		$row->duration_min          = null === $row->duration_min ? null : (int) $row->duration_min;
 		$row->min_people            = (int) $row->min_people;

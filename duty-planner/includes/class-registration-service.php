@@ -39,7 +39,7 @@ class Registration_Service {
 			return new WP_Error( 'dutyplan_spot', __( 'This duty does not exist.', 'duty-planner' ), array( 'status' => 404 ) );
 		}
 		$note = '' === $spot->note_label ? '' : mb_substr( trim( sanitize_text_field( (string) $opts['note'] ) ), 0, self::MAX_NOTE_LENGTH );
-		if ( ! Time::is_date( $date ) || ! Recurrence::occurs_on( $spot, $date ) ) {
+		if ( ! Time::is_date( $date ) || ! Recurrence::occurs_on( $spot, $date, Repository::count_for( $spot_id, $date ) > 0 ) ) {
 			return new WP_Error( 'dutyplan_date', __( 'This duty does not take place on that date.', 'duty-planner' ), array( 'status' => 400 ) );
 		}
 		if ( Repository::is_skipped( $spot_id, $date ) ) {

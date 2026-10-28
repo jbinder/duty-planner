@@ -99,6 +99,13 @@ $weekday_names = Time::weekday_names();
 				</td>
 			</tr>
 			<tr>
+				<th scope="row"><?php esc_html_e( 'Public holidays', 'duty-planner' ); ?></th>
+				<td>
+					<label><input type="checkbox" name="skip_holidays" value="1" <?php checked( $values['skip_holidays'] ); ?>> <?php esc_html_e( 'Skip Austrian public holidays', 'duty-planner' ); ?></label>
+					<p class="description"><?php esc_html_e( 'No duty on statutory public holidays in Austria (e.g. Easter Monday, National Day, Christmas).', 'duty-planner' ); ?></p>
+				</td>
+			</tr>
+			<tr>
 				<th scope="row"><?php esc_html_e( 'Time', 'duty-planner' ); ?></th>
 				<td><label><input type="checkbox" name="all_day" value="1" id="dp-all-day" <?php checked( $values['all_day'] ); ?>> <?php esc_html_e( 'All day (no specific time)', 'duty-planner' ); ?></label></td>
 			</tr>

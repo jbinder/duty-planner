@@ -19,16 +19,19 @@ class Occurrences {
 		}
 
 		$skips = Repository::skips( array_keys( $spots ), $from, $to );
-		$regs  = array();
+		$regs   = array();
+		$booked = array();
 		foreach ( Repository::registrations_in_range( $from, $to, array_keys( $spots ) ) as $reg ) {
 			$regs[ $reg->spot_id . '|' . $reg->occurrence_date ][] = $reg;
+			$booked[ (int) $reg->spot_id ][ $reg->occurrence_date ] = true;
 		}
 
 		$now = Time::now();
 		$out = array();
 		foreach ( $spots as $spot ) {
 			$restricted = Allowlist::is_restricted( $spot );
-			foreach ( Recurrence::dates( $spot, $from, $to ) as $date ) {
+			// Holidays that people already signed up for stay, so no registration gets lost.
+			foreach ( Recurrence::dates( $spot, $from, $to, $booked[ $spot->id ] ?? array() ) as $date ) {
 				$list   = $regs[ $spot->id . '|' . $date ] ?? array();
 				$people = array();
 				foreach ( $list as $reg ) {

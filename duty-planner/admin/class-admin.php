@@ -89,6 +89,7 @@ class Admin {
 			'interval_n'            => 1,
 			'start_date'            => Time::today(),
 			'end_date'              => '',
+			'skip_holidays'         => false,
 			'all_day'               => false,
 			'start_time'            => '18:00',
 			'duration_min'          => 60,
@@ -141,6 +142,7 @@ class Admin {
 			'interval_n'            => max( 1, min( 52, absint( $in['interval_n'] ?? 1 ) ) ),
 			'start_date'            => (string) ( $in['start_date'] ?? '' ),
 			'end_date'              => (string) ( $in['end_date'] ?? '' ),
+			'skip_holidays'         => empty( $in['skip_holidays'] ) ? 0 : 1,
 			'all_day'               => $all_day ? 1 : 0,
 			'start_time'            => $all_day ? null : Settings::sanitize_time( $in['start_time'] ?? '', '' ),
 			'duration_min'          => $all_day ? null : absint( $in['duration_min'] ?? 0 ),
@@ -326,6 +328,9 @@ class Admin {
 		if ( $spot->end_date ) {
 			/* translators: %s: date */
 			$text .= ' ' . sprintf( __( 'until %s', 'duty-planner' ), Time::format_date( $spot->end_date ) );
+		}
+		if ( $spot->skip_holidays ) {
+			$text .= ' · ' . __( 'not on public holidays', 'duty-planner' );
 		}
 		return $text;
 	}

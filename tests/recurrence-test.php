@@ -7,6 +7,7 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 
+require __DIR__ . '/../duty-planner/includes/class-holidays.php';
 require __DIR__ . '/../duty-planner/includes/class-recurrence.php';
 require __DIR__ . '/../duty-planner/includes/class-allowlist.php';
 
@@ -86,6 +87,28 @@ check( 'status needs', 'needs', Recurrence::status( 1, 2, 4 ) );
 check( 'status open', 'open', Recurrence::status( 2, 2, 4 ) );
 check( 'status full', 'full', Recurrence::status( 4, 2, 4 ) );
 check( 'status min 0', 'open', Recurrence::status( 0, 0, 1 ) );
+
+echo "\nAustrian public holidays\n";
+use DutyPlanner\Holidays;
+check(
+	'2026 holidays',
+	array( '2026-01-01', '2026-01-06', '2026-04-05', '2026-04-06', '2026-05-01', '2026-05-14', '2026-05-24', '2026-05-25', '2026-06-04', '2026-08-15', '2026-10-26', '2026-11-01', '2026-12-08', '2026-12-25', '2026-12-26' ),
+	( static function () { $d = array_keys( Holidays::for_year( 2026 ) ); sort( $d ); return $d; } )()
+);
+check( 'Easter Monday 2027', true, Holidays::is_holiday( '2027-03-29' ) );
+check( 'Corpus Christi 2025', true, Holidays::is_holiday( '2025-06-19' ) );
+check( 'Good Friday is no holiday', false, Holidays::is_holiday( '2026-04-03' ) );
+check( 'Christmas Eve is no holiday', false, Holidays::is_holiday( '2026-12-24' ) );
+
+$s = spot( array( 'frequency' => 'daily', 'start_date' => '2026-10-24', 'skip_holidays' => true ) );
+check( 'daily skips National Day', array( '2026-10-24', '2026-10-25', '2026-10-27' ), Recurrence::dates( $s, '2026-10-24', '2026-10-27' ) );
+$s = spot( array( 'weekdays' => array( 1 ), 'start_date' => '2026-03-30', 'skip_holidays' => true ) );
+check( 'weekly Mon skips Easter Monday', array( '2026-03-30', '2026-04-13' ), Recurrence::dates( $s, '2026-03-30', '2026-04-13' ) );
+check( 'occurs_on holiday false', false, Recurrence::occurs_on( $s, '2026-04-06' ) );
+check( 'booked holiday is kept', array( '2026-03-30', '2026-04-06', '2026-04-13' ), Recurrence::dates( $s, '2026-03-30', '2026-04-13', array( '2026-04-06' => true ) ) );
+check( 'occurs_on booked holiday true', true, Recurrence::occurs_on( $s, '2026-04-06', true ) );
+$s = spot( array( 'weekdays' => array( 1 ), 'start_date' => '2026-03-30' ) );
+check( 'without flag holiday stays', array( '2026-03-30', '2026-04-06', '2026-04-13' ), Recurrence::dates( $s, '2026-03-30', '2026-04-13' ) );
 
 echo "\nAllowlist parsing\n";
 check( 'parse', array( 'a@x.org', '@y.org', 'b@z.org' ), DutyPlanner\Allowlist::parse( " A@x.org\n@Y.org, b@z.org ;\n\n" ) );

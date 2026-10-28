@@ -5,16 +5,29 @@ namespace DutyPlanner;
  * Pure recurrence logic (no WordPress dependencies, unit-testable).
  *
  * A spot needs: frequency ('daily'|'weekly'), weekdays (int[] ISO 1-7), interval_n,
- * start_date (Y-m-d), end_date (Y-m-d|null).
+ * start_date (Y-m-d), end_date (Y-m-d|null), optionally skip_holidays (bool, Austrian public holidays).
  */
 class Recurrence {
 
 	/**
 	 * Dates (Y-m-d) on which the spot occurs within [$from, $to], both inclusive.
 	 *
+	 * @param array<string,mixed> $keep Dates (as keys) kept even on a skipped holiday, e.g. those
+	 *                                  people already signed up for.
 	 * @return string[]
 	 */
-	public static function dates( $spot, string $from, string $to ): array {
+	public static function dates( $spot, string $from, string $to, array $keep = array() ): array {
+		$dates = self::raw_dates( $spot, $from, $to );
+		if ( ! empty( $spot->skip_holidays ) ) {
+			$dates = array_values( array_filter( $dates, static function ( $date ) use ( $keep ) {
+				return isset( $keep[ $date ] ) || ! Holidays::is_holiday( $date );
+			} ) );
+		}
+		return $dates;
+	}
+
+	/** Dates by the repeat rule alone, before leaving out holidays. */
+	private static function raw_dates( $spot, string $from, string $to ): array {
 		$utc = new \DateTimeZone( 'UTC' );
 		$lo  = max( $from, $spot->start_date );
 		$hi  = $spot->end_date ? min( $to, $spot->end_date ) : $to;
@@ -61,8 +74,8 @@ class Recurrence {
 		return $dates;
 	}
 
-	public static function occurs_on( $spot, string $date ): bool {
-		return self::dates( $spot, $date, $date ) === array( $date );
+	public static function occurs_on( $spot, string $date, bool $keep = false ): bool {
+		return self::dates( $spot, $date, $date, $keep ? array( $date => true ) : array() ) === array( $date );
 	}
 
 	/** 'needs' (below minimum), 'open' (places free) or 'full'. */

@@ -7,6 +7,7 @@ The plugin lives in [`duty-planner/`](duty-planner/). See [Installation](#instal
 ## Features
 
 - **Spots** recur daily or weekly (chosen weekdays), every N days/weeks, optionally with an end date. They are either timed (start + duration) or all-day.
+- **Public holidays** (optional, per spot): tick *Skip Austrian public holidays* and the spot doesn't take place on statutory holidays in Austria (New Year, Epiphany, Easter Sunday/Monday, 1 May, Ascension, Whit Sunday/Monday, Corpus Christi, 15 Aug, 26 Oct, 1 Nov, 8 Dec, 25/26 Dec). Holidays are computed, so they work for any year. Dates people had already signed up for before you ticked the box stay in the calendar, so no registration gets lost.
 - **Min/max people** per spot. The calendar marks each date *Needs people* (red, striped), *Places free* (amber) or *Fully booked* (green) with an icon, a count and a fill bar showing the minimum.
 - **Public calendar** via the shortcode `[duty_planner]` (options: `view="month|list"`, `weeks="6"`, `spots="1,2"`). It has a month grid that becomes an agenda on phones, a list view, and a sign-up dialog. Only display names are public. Emails are never sent to the browser.
 - **Formatted descriptions:** the description of a spot is edited with WordPress' small text editor (bold, italic, bullet/numbered lists, links). Only these safe tags are kept; scripts and event handlers are removed.

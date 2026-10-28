@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Installer {
 
-	const DB_VERSION = '2';
+	const DB_VERSION = '3';
 
 	public static function activate() {
 		self::create_tables();
@@ -45,6 +45,7 @@ class Installer {
   interval_n smallint(5) unsigned NOT NULL DEFAULT 1,
   start_date date NOT NULL,
   end_date date NULL DEFAULT NULL,
+  skip_holidays tinyint(1) NOT NULL DEFAULT 0,
   all_day tinyint(1) NOT NULL DEFAULT 0,
   start_time time NULL DEFAULT NULL,
   duration_min int(10) unsigned NULL DEFAULT NULL,
